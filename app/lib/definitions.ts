@@ -13,7 +13,6 @@ export type List = {
     id: string;
     userId: string;
     name: string;
-    type: string; //legger til rette for flere listetyper (skole, jobb, handleliste, gaveliste, etc)
     createdAt: string;
     updatedAt?: string | null;
     tasks?: Task[];
@@ -21,7 +20,8 @@ export type List = {
 
 export type User = { //ønsker å ha flere brukere etterhvert
     id: string;
-    name: string;
+    firstname: string;
+    lastname: string;
     email: string;
     password: string;
     createdAt: string;
