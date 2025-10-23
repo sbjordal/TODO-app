@@ -31,15 +31,22 @@ export default function TaskList({ tasks }: Props) {
     }
   }
 
+  const sortedTasks = [...tasks].sort((a, b) => { // fullførte tasks flyttes nederst i listen
+    if (a.completed === b.completed) return 0; // 0: Uendret rekkefølge
+    return a.completed ? 1 : -1; //negativt tall: a kommer før b, positivt: b før a
+  });
+
   return (
     <ul className="task-list">
-      {tasks.map((task) => (
+      {sortedTasks.map((task) => (
         <li key={task.id}>
           <div>
             <input
               type="checkbox"
               checked={task.completed}
-              onChange={(e) => handleToggleCompleted(task.id, e.target.checked)}
+              onChange={(e) =>
+                handleToggleCompleted(task.id, e.target.checked)
+              }
             />
             <span
               style={{

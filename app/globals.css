@@ -2,45 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
-/* === Base === */
-:root {
-  --violet-500: #9370db;
-  --violet-600: #7e5cc4;
-  --violet-700: #6842a1;
-  --violet-100: #e7e0f5;
-  --violet-200: #d7c7f0;
-  --violet-300: #c3b5e6;
-  --ink-800:  #4b367c;
-  --text:     #2e294e;
-}
-
 body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   background-color: #f4f1fa;
 }
 
-
-.page-title,
-.title {
+.page-title {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--ink-800);
+  color: #4b367c;
   margin-bottom: 1rem;
   text-align: center;
 }
 
-.card-title,
-.todo-list-card-title { 
-  font-size: 1.4rem;
-  font-weight: 600;
-  color: var(--ink-800);
+.page-subtitle {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #4b367c;
+  text-align: center;
+  margin-bottom: 1rem;
 }
 
+.card-title,
+.todo-list-card-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #4b367c;
+}
 
 .my-button,
 .add-button,
 .small-button {
-  background-color: var(--violet-500);
+  background-color: #9370db;
   color: #fff;
   font-weight: 600;
   border: none;
@@ -53,29 +46,28 @@ body {
 .my-button:hover,
 .add-button:hover,
 .small-button:hover {
-  background-color: var(--violet-600);
+  background-color: #7e5cc4;
   transform: translateY(-1px);
 }
 
 .my-button:active,
 .add-button:active,
 .small-button:active {
-  background-color: var(--violet-700);
+  background-color: #6842a1;
   transform: translateY(0);
 }
 
-/* størrelser */
-.my-button {            /* primær, stor */
+.my-button {
   font-size: 1rem;
   padding: .75rem 1.5rem;
 }
 
-.add-button {           /* primær, medium (submit) */
+.add-button {
   font-size: 1rem;
   padding: .5rem 1.25rem;
 }
 
-.small-button {         /* sekundær, liten */
+.small-button {
   display: inline-block;
   font-weight: 500;
   font-size: .85rem;
@@ -85,7 +77,6 @@ body {
   margin-top: 1rem;
 }
 
-/* === Forms === */
 .form {
   display: flex;
   justify-content: center;
@@ -97,7 +88,7 @@ body {
   width: 320px;
   height: 48px;
   padding: 0 1rem;
-  border: 1px solid var(--violet-500);
+  border: 1px solid #9370db;
   border-radius: .5rem;
   box-shadow: 0 1px 2px rgba(0,0,0,.05);
   font-size: 1rem;
@@ -106,13 +97,14 @@ body {
 
 .input:focus {
   outline: none;
-  border-color: var(--violet-500);
+  border-color: #9370db;
   box-shadow: 0 0 0 3px rgba(59,130,246,.3);
 }
 
-.counter { color: var(--violet-700); }
+.counter {
+  color: #6842a1;
+}
 
-/* === Task list === */
 .task-list {
   max-width: 500px;
   margin: 2rem auto;
@@ -121,7 +113,7 @@ body {
 }
 
 .task-list li {
-  background: var(--violet-100);
+  background: #e7e0f5;
   padding: 12px;
   margin-bottom: 10px;
   border-radius: 6px;
@@ -131,8 +123,13 @@ body {
   transition: background-color .2s;
 }
 
-.task-list li:hover { background: var(--violet-200); }
-.task-list input[type="checkbox"] { margin-right: 10px; }
+.task-list li:hover {
+  background: #d7c7f0;
+}
+
+.task-list input[type="checkbox"] {
+  margin-right: 10px;
+}
 
 .remove-button {
   background: none;
@@ -142,17 +139,19 @@ body {
   cursor: pointer;
   transition: color .2s;
 }
-.remove-button:hover { color: #b71c1c; }
 
-/* === Cards === */
+.remove-button:hover {
+  color: #b71c1c;
+}
+
 .todo-list-card {
   display: block;
-  background-color: var(--violet-100);
-  border: 1px solid var(--violet-300);
+  background-color: #e7e0f5;
+  border: 1px solid #c3b5e6;
   border-radius: 10px;
   padding: 1rem;
   text-decoration: none;
-  color: var(--text);
+  color: #2e294e;
   cursor: pointer;
   transition: background-color .2s, transform .15s ease, box-shadow .2s;
   min-height: 80px;
@@ -162,12 +161,11 @@ body {
 }
 
 .todo-list-card:hover {
-  background-color: var(--violet-200);
+  background-color: #d7c7f0;
   transform: translateY(-3px);
   box-shadow: 0 6px 12px rgba(0,0,0,.08);
 }
 
-/* === Layout === */
 .list-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -177,17 +175,8 @@ body {
   margin: 0 auto;
 }
 
-/* (valgfritt, om du fortsatt bruker den) */
 .create-list-container {
   display: flex;
   justify-content: center;
   margin-top: 3rem;
-}
-
-.page-subtitle {
-  font-size: 1.25rem;      /* litt mindre enn page-title */
-  font-weight: 500;
-  color: var(--ink-800);
-  text-align: center;
-  margin-bottom: 1rem;
 }
