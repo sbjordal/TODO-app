@@ -22,10 +22,8 @@ export default function ListForm({ userId }: { userId: string }) {
 
       await createList(formData);
 
-      // Nullstill input
       setName("");
 
-      // Gå tilbake til dashboard etter opprettelse
       router.push("/dashboard");
     } catch (err: any) {
       setError(err.message || "Noe gikk galt");
@@ -35,22 +33,18 @@ export default function ListForm({ userId }: { userId: string }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2 w-full max-w-md">
+    <form onSubmit={handleSubmit} className="form">
       <input
         type="text"
         value={name}
         onChange={(e) => setName(e.target.value)}
         placeholder="Navn på ny liste..."
-        className="flex-1 p-2 border rounded"
+        className="input"
       />
       <button
-        type="submit"
-        disabled={loading}
-        className="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600 transition-colors"
-      >
+        type="submit" disabled={loading} className="add-button">
         {loading ? "Lagrer..." : "Lag liste"}
       </button>
-      {error && <p className="text-red-500">{error}</p>}
     </form>
   );
 }

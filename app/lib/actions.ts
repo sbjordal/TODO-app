@@ -39,12 +39,12 @@ export async function createList(formData: FormData) {
   revalidatePath(`/dashboard/`);
 }
 export async function createTask(formData: FormData) {
-  const listId = formData.get('listId') as string;
-  const title = formData.get('title') as string;
+    const { listId, title } = CreateTaskSchema.parse({
+        listId: formData.get('listId'),
+        title: formData.get('title'), 
+    });
 
-  if (!listId || !title) throw new Error('Missing listId or title');
-
-  const id = uuidv4(); // generer ny UUID
+  const id = uuidv4(); 
 
   await sql`
     INSERT INTO "Task" 

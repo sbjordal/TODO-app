@@ -6,10 +6,9 @@ export default function TodoListCard({ list }: { list: TodoList }) {
   return (
     <Link
       href={`/dashboard/${list.id}`}
-      className="block bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 p-6 cursor-pointer w-full max-w-md"
+      className="todo-list-card"
     >
-      <h2 className="text-xl font-bold text-gray-800">{list.name}</h2>
-      
+      <h2 className="todo-list-card-title">{list.name}</h2>
     </Link>
   );
 }

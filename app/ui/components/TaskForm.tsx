@@ -19,17 +19,17 @@ export default function TaskForm({ listId }: { listId: string }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="task-form">
+    <form onSubmit={handleSubmit} className="form">
       <input
         type="text"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         placeholder="Legg til ny oppgave..."
-        className="task-input"
+        className="input"
       />
       <button
         type="submit"
-        className="task-button"
+        className="add-button"
       >
         Legg til
       </button>

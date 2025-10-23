@@ -1,6 +1,7 @@
 import { fetchListWithTasks } from "@/app/lib/data";
 import TaskForm from "../../ui/components/TaskForm";
 import TaskList from "../../ui/components/TaskList";
+import DashboardHeader from "@/app/ui/components/CreateListButton";
 
 type Props = {
   params: { listId: string };

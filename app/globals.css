@@ -15,7 +15,7 @@ body {
 }
 
 .task-list li {
-  background: #e7e0f5;          /* lys blå */
+  background: #e7e0f5;        
   padding: 12px;
   margin-bottom: 10px;
   border-radius: 6px;
@@ -26,7 +26,7 @@ body {
 }
 
 .task-list li:hover {
-  background: #d7c7f0;         /* litt mørkere ved hover */
+  background: #d7c7f0;       
 }
 
 .task-list input[type="checkbox"] {
@@ -45,34 +45,31 @@ body {
   color: #b71c1c;
 }
 
-/* Legg til nederst i globals.css */
-
-/* Skjema for å legge til ny oppgave */
-.task-form {
+.form {
   display: flex;
   justify-content: center;
   gap: 0.5rem;
   margin-top: 1.5rem;
 }
 
-.task-input {
-  width: 320px;               /* tilsvarer Tailwind w-80 */
-  height: 48px;               /* tilsvarer h-12 */
+.input {
+  width: 320px;             
+  height: 48px;        
   padding: 0 1rem;
-  border: 1px solid #9370db;  /* lys grå kant */
-  border-radius: 0.5rem;      /* avrundede hjørner */
+  border: 1px solid #9370db; 
+  border-radius: 0.5rem;   
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   font-size: 1rem;
   transition: box-shadow 0.2s, border-color 0.2s;
 }
 
-.task-input:focus {
+.input:focus {
   outline: none;
-  border-color: #9370db;        /* blå kant */
+  border-color: #9370db;     
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
 }
 
-.task-button {
+.add-button {
   background-color: #9370db;
   color: white;
   font-weight: 600;
@@ -83,10 +80,85 @@ body {
   transition: background-color 0.2s;
 }
 
-.task-button:hover {
+.add-button:hover {
   background-color: #7e5cc4;
 }
 
-.task-button:active {
+.add-button:active {
   background-color: #6842a1;
 }
+
+.todo-list-card {
+  display: block;
+  background-color: #e7e0f5;
+  border: 1px solid #c3b5e6;
+  border-radius: 10px;
+  padding: 1rem;
+  text-decoration: none;
+  color: #2e294e;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.15s ease, box-shadow 0.2s;
+  min-height: 80px;
+  max-width: 400px;
+  margin: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.todo-list-card:hover {
+  background-color: #d7c7f0;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+}
+
+.todo-list-card-title {
+  font-size: 1.4rem;
+  font-weight: none;
+  color: #4b367c;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #4b367c;
+  margin-bottom: 1rem;
+  text-align: center; 
+}
+
+.create-list-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 3rem;
+}
+
+.create-list-button {
+  background-color: #9370db;      
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.15s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.create-list-button:hover {
+  background-color: #7e5cc4;
+  transform: translateY(-1px);
+}
+
+.create-list-button:active {
+  background-color: #6842a1;
+  transform: translateY(0);
+}
+
+.list-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  justify-content: center;
+  gap: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
