@@ -1,7 +1,6 @@
 import { fetchListWithTasks } from "@/app/lib/data";
 import TaskForm from "../../ui/components/TaskForm";
 import TaskList from "../../ui/components/TaskList";
-import DashboardHeader from "@/app/ui/components/CreateListButton";
 import BackToDashboardButton from "@/app/ui/components/BackToDashboardButton";
 
 type Props = {
@@ -9,7 +8,7 @@ type Props = {
 };
 
 export default async function ListPage({ params }: Props) {
-  const resolvedParams = await params; // unwrap promise
+  const resolvedParams = await params; 
   const listId = resolvedParams.listId;
 
   if (!listId) throw new Error("Invalid listId");

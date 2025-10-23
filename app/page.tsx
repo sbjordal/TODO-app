@@ -1,28 +1,22 @@
-import TodoListCard from "@/app/ui/components/TodoListCard";
-import { fetchUser, fetchLists } from "@/app/lib/data";
-import { TodoList } from "@/app/lib/definitions";
-import CreateListButton from "@/app/ui/components/CreateListButton";
+'use client';
 
-export default async function DashboardPage() {
-  const user = await fetchUser();
-  if (!user) throw new Error("User not found");
+import { useRouter } from "next/navigation";
 
-  const lists: TodoList[] = await fetchLists(user.id);
+export default function Page() {
+  const router = useRouter();
 
+  // Legge til login / adduser-funksjonalitet
   return (
     <main className="page-container">
-      <h1 className="page-title">Hei {user.firstname} 👋</h1>
-      <p className="page-subtitle">
-        Her er listene dine:
-      </p>
-
-      <div className="list-grid">
-        {lists.map((list) => (
-          <TodoListCard key={list.id} list={list} />
-        ))}
+      <div className="page-title">
+        <h1 className="landing-title">TODO</h1>
+        <button
+          onClick={() => router.push("/dashboard")}
+          className="my-button"
+        >
+          Vis mine lister
+        </button>
       </div>
-
-      <CreateListButton />
     </main>
   );
 }
