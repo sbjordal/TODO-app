@@ -22,9 +22,9 @@ export default function TaskList({ tasks }: Props) {
     }
   }
 
-  async function handleToggle(taskId: string, checked: boolean) {
+  async function handleToggleCompleted(taskId: string, completed: boolean) {
     try {
-      await toggleTaskCompleted(taskId, checked);
+      await toggleTaskCompleted(taskId, completed);
       window.location.reload();
     } catch (err) {
       console.error("Kunne ikke oppdatere task:", err);
@@ -39,7 +39,7 @@ export default function TaskList({ tasks }: Props) {
             <input
               type="checkbox"
               checked={task.completed}
-              onChange={(e) => handleToggle(task.id, e.target.checked)}
+              onChange={(e) => handleToggleCompleted(task.id, e.target.checked)}
             />
             <span
               style={{

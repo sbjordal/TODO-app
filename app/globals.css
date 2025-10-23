@@ -2,12 +2,117 @@
 @tailwind components;
 @tailwind utilities;
 
+/* === Base === */
+:root {
+  --violet-500: #9370db;
+  --violet-600: #7e5cc4;
+  --violet-700: #6842a1;
+  --violet-100: #e7e0f5;
+  --violet-200: #d7c7f0;
+  --violet-300: #c3b5e6;
+  --ink-800:  #4b367c;
+  --text:     #2e294e;
+}
 
 body {
-          font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-          background-color: #f4f1fa;
-        }
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background-color: #f4f1fa;
+}
 
+
+.page-title,
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--ink-800);
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.card-title,
+.todo-list-card-title { 
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--ink-800);
+}
+
+
+.my-button,
+.add-button,
+.small-button {
+  background-color: var(--violet-500);
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color .2s, transform .15s ease, box-shadow .2s;
+  box-shadow: 0 2px 4px rgba(0,0,0,.1);
+}
+
+.my-button:hover,
+.add-button:hover,
+.small-button:hover {
+  background-color: var(--violet-600);
+  transform: translateY(-1px);
+}
+
+.my-button:active,
+.add-button:active,
+.small-button:active {
+  background-color: var(--violet-700);
+  transform: translateY(0);
+}
+
+/* størrelser */
+.my-button {            /* primær, stor */
+  font-size: 1rem;
+  padding: .75rem 1.5rem;
+}
+
+.add-button {           /* primær, medium (submit) */
+  font-size: 1rem;
+  padding: .5rem 1.25rem;
+}
+
+.small-button {         /* sekundær, liten */
+  display: inline-block;
+  font-weight: 500;
+  font-size: .85rem;
+  padding: .25rem .75rem;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.1);
+  margin-top: 1rem;
+}
+
+/* === Forms === */
+.form {
+  display: flex;
+  justify-content: center;
+  gap: .5rem;
+  margin-top: 1.5rem;
+}
+
+.input {
+  width: 320px;
+  height: 48px;
+  padding: 0 1rem;
+  border: 1px solid var(--violet-500);
+  border-radius: .5rem;
+  box-shadow: 0 1px 2px rgba(0,0,0,.05);
+  font-size: 1rem;
+  transition: box-shadow .2s, border-color .2s;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--violet-500);
+  box-shadow: 0 0 0 3px rgba(59,130,246,.3);
+}
+
+.counter { color: var(--violet-700); }
+
+/* === Task list === */
 .task-list {
   max-width: 500px;
   margin: 2rem auto;
@@ -16,23 +121,18 @@ body {
 }
 
 .task-list li {
-  background: #e7e0f5;        
+  background: var(--violet-100);
   padding: 12px;
   margin-bottom: 10px;
   border-radius: 6px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  transition: background-color 0.2s;
+  transition: background-color .2s;
 }
 
-.task-list li:hover {
-  background: #d7c7f0;       
-}
-
-.task-list input[type="checkbox"] {
-  margin-right: 10px;
-}
+.task-list li:hover { background: var(--violet-200); }
+.task-list input[type="checkbox"] { margin-right: 10px; }
 
 .remove-button {
   background: none;
@@ -40,124 +140,34 @@ body {
   color: #d32f2f;
   font-size: 20px;
   cursor: pointer;
+  transition: color .2s;
 }
+.remove-button:hover { color: #b71c1c; }
 
-.remove-button:hover {
-  color: #b71c1c;
-}
-
-.form {
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
-  margin-top: 1.5rem;
-}
-
-.input {
-  width: 320px;             
-  height: 48px;        
-  padding: 0 1rem;
-  border: 1px solid #9370db; 
-  border-radius: 0.5rem;   
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  font-size: 1rem;
-  transition: box-shadow 0.2s, border-color 0.2s;
-}
-
-.input:focus {
-  outline: none;
-  border-color: #9370db;     
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
-}
-
-.add-button {
-  background-color: #9370db;
-  color: white;
-  font-weight: 600;
-  padding: 0.5rem 1.25rem;
-  border: none;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.add-button:hover {
-  background-color: #7e5cc4;
-}
-
-.add-button:active {
-  background-color: #6842a1;
-}
-
-.counter {
-  color: #6842a1;
-}
-
+/* === Cards === */
 .todo-list-card {
   display: block;
-  background-color: #e7e0f5;
-  border: 1px solid #c3b5e6;
+  background-color: var(--violet-100);
+  border: 1px solid var(--violet-300);
   border-radius: 10px;
   padding: 1rem;
   text-decoration: none;
-  color: #2e294e;
+  color: var(--text);
   cursor: pointer;
-  transition: background-color 0.2s, transform 0.15s ease, box-shadow 0.2s;
+  transition: background-color .2s, transform .15s ease, box-shadow .2s;
   min-height: 80px;
   max-width: 400px;
   margin: 1rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 4px rgba(0,0,0,.05);
 }
 
 .todo-list-card:hover {
-  background-color: #d7c7f0;
+  background-color: var(--violet-200);
   transform: translateY(-3px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 6px 12px rgba(0,0,0,.08);
 }
 
-.todo-list-card-title {
-  font-size: 1.4rem;
-  font-weight: none;
-  color: #4b367c;
-}
-
-.title {
-  font-size: 2rem;
-  font-weight: bold;
-  color: #4b367c;
-  margin-bottom: 1rem;
-  text-align: center; 
-}
-
-.create-list-container {
-  display: flex;
-  justify-content: center;
-  margin-top: 3rem;
-}
-
-.my-button {
-  background-color: #9370db;      
-  color: white;
-  font-weight: 600;
-  font-size: 1rem;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.2s, transform 0.15s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.my-button:hover {
-  background-color: #7e5cc4;
-  transform: translateY(-1px);
-}
-
-.my-button:active {
-  background-color: #6842a1;
-  transform: translateY(0);
-}
-
+/* === Layout === */
 .list-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -167,3 +177,17 @@ body {
   margin: 0 auto;
 }
 
+/* (valgfritt, om du fortsatt bruker den) */
+.create-list-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 3rem;
+}
+
+.page-subtitle {
+  font-size: 1.25rem;      /* litt mindre enn page-title */
+  font-weight: 500;
+  color: var(--ink-800);
+  text-align: center;
+  margin-bottom: 1rem;
+}

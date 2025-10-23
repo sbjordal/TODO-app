@@ -1,25 +1,28 @@
-'use client';
+import TodoListCard from "@/app/ui/components/TodoListCard";
+import { fetchUser, fetchLists } from "@/app/lib/data";
+import { TodoList } from "@/app/lib/definitions";
+import CreateListButton from "@/app/ui/components/CreateListButton";
 
-import { useRouter } from "next/navigation";
+export default async function DashboardPage() {
+  const user = await fetchUser();
+  if (!user) throw new Error("User not found");
 
-export default function Page() {
-  const router = useRouter();
+  const lists: TodoList[] = await fetchLists(user.id);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-orange-100 font-sans dark:bg-black">
-      <main className="flex w-full max-w-3xl flex-col items-center justify-center py-32 px-16 rounded-lg shadow-lg">
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            TODO
-          </h1>
+    <main className="page-container">
+      <h1 className="page-title">Hei {user.firstname} 👋</h1>
+      <p className="page-subtitle">
+        Her er listene dine:
+      </p>
 
-          <button
-            onClick={() => router.push("/dashboard")}
-            className="my-button"
-          >
-            Vis mine lister
-          </button>
-        </div>
-      </main>
-    </div>
+      <div className="list-grid">
+        {lists.map((list) => (
+          <TodoListCard key={list.id} list={list} />
+        ))}
+      </div>
+
+      <CreateListButton />
+    </main>
   );
 }

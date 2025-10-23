@@ -3,16 +3,16 @@
 
 import { useRouter } from "next/navigation";
 
-export default function CreateListButton() {
+export default function BackToDashboardButton() {
   const router = useRouter();
 
   return (
     <div className="create-list-container">
       <button
-        onClick={() => router.push("/dashboard/create")}
-        className="my-button"
+        onClick={() => router.push("/dashboard")}
+        className="small-button"
       >
-        Lag ny liste
+        Tilbake til mine lister
       </button>
     </div>
   );

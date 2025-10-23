@@ -2,6 +2,7 @@ import { fetchListWithTasks } from "@/app/lib/data";
 import TaskForm from "../../ui/components/TaskForm";
 import TaskList from "../../ui/components/TaskList";
 import DashboardHeader from "@/app/ui/components/CreateListButton";
+import BackToDashboardButton from "@/app/ui/components/BackToDashboardButton";
 
 type Props = {
   params: { listId: string };
@@ -17,13 +18,15 @@ export default async function ListPage({ params }: Props) {
   if (!list) throw new Error("List not found");
 
   return (
-    <div className="max-w-2xl mx-auto px-4 mt-8">
-      <h1 className="text-2xl font-bold mb-4 text-center">
+    <div className="page-container">
+      <h1 className="page-title">
         {list.name}
       </h1>
 
       <TaskList tasks={list.tasks} />
       <TaskForm listId={list.id} />
+      <BackToDashboardButton/>
     </div>
+    
   );
 }
