@@ -135,7 +135,7 @@ body {
   margin-top: 3rem;
 }
 
-.create-list-button {
+.my-button {
   background-color: #9370db;      
   color: white;
   font-weight: 600;
@@ -148,12 +148,12 @@ body {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.create-list-button:hover {
+.my-button:hover {
   background-color: #7e5cc4;
   transform: translateY(-1px);
 }
 
-.create-list-button:active {
+.my-button:active {
   background-color: #6842a1;
   transform: translateY(0);
 }

@@ -2,9 +2,7 @@
 
 import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
-import { redirect } from 'next/navigation';
 import postgres from 'postgres';
-import { Task, TodoList } from './definitions';
 import { v4 as uuidv4 } from "uuid";
 
 const sql = postgres(process.env.DATABASE_URL!, { ssl: 'require' });
@@ -62,14 +60,8 @@ export async function toggleTaskCompleted(taskId: string, completed: boolean) {
     SET "completed" = ${completed}, "updatedAt" = now()
     WHERE "id" = ${taskId}
   `;
-}
 
-export async function updateTaskCompleted(taskId: string, completed: boolean) {
-  await sql`
-    UPDATE "Task"
-    SET "completed" = ${completed}, "updatedAt" = now()
-    WHERE "id" = ${taskId}
-  `;
+  revalidatePath("/dashboard")
 }
 
 export async function deleteTask(taskId: string) {

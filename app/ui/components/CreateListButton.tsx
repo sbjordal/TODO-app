@@ -10,7 +10,7 @@ export default function CreateListButton() {
     <div className="create-list-container">
       <button
         onClick={() => router.push("/dashboard/create")}
-        className="create-list-button"
+        className="bigger-button"
       >
         Lag ny liste
       </button>

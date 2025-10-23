@@ -1,6 +1,9 @@
-import Link from "next/link";
+'use client';
+
+import { useRouter } from "next/navigation";
 
 export default function Page() {
+  const router = useRouter();
   return (
     <div className="flex min-h-screen items-center justify-center bg-orange-100 font-sans dark:bg-black">
       <main className="flex w-full max-w-3xl flex-col items-center justify-center py-32 px-16 rounded-lg shadow-lg">
@@ -9,12 +12,12 @@ export default function Page() {
             TODO
           </h1>
 
-          <Link
-            href="/dashboard"
-            className="mt-4 px-6 py-3 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+          <button
+            onClick={() => router.push("/dashboard")}
+            className="my-button"
           >
             Vis mine lister
-          </Link>
+          </button>
         </div>
       </main>
     </div>

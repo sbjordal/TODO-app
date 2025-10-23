@@ -18,7 +18,7 @@ export default function TaskItem({ id, title, completed }: Props) {
   }
 
   return (
-    <div className="flex items-center gap-2 p-2 bg-white rounded shadow hover:bg-gray-50">
+    <div className="items-center gap-2 p-2 bg-white rounded shadow hover:bg-gray-50">
       <input
         type="checkbox"
         checked={isCompleted}
