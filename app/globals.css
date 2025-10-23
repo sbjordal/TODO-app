@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+body {
+          background-color: #f4f1fa;
+        }
+
+.task-list {
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 0;
+  list-style: none;
+}
+
+.task-list li {
+  background: #e7e0f5;          /* lys blå */
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.2s;
+}
+
+.task-list li:hover {
+  background: #d7c7f0;         /* litt mørkere ved hover */
+}
+
+.task-list input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+.task-list button {
+  background: none;
+  border: none;
+  color: #d32f2f;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.task-list button:hover {
+  color: #b71c1c;
+}
+
+/* Legg til nederst i globals.css */
+
+/* Skjema for å legge til ny oppgave */
+.task-form {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.task-input {
+  width: 320px;               /* tilsvarer Tailwind w-80 */
+  height: 48px;               /* tilsvarer h-12 */
+  padding: 0 1rem;
+  border: 1px solid #9370db;  /* lys grå kant */
+  border-radius: 0.5rem;      /* avrundede hjørner */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  font-size: 1rem;
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+.task-input:focus {
+  outline: none;
+  border-color: #9370db;        /* blå kant */
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+.task-button {
+  background-color: #9370db;
+  color: white;
+  font-weight: 600;
+  padding: 0.5rem 1.25rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.task-button:hover {
+  background-color: #7e5cc4;
+}
+
+.task-button:active {
+  background-color: #6842a1;
+}

@@ -9,7 +9,7 @@ export type Task = {
     updatedAt?: string | null;
 }
 
-export type List = {
+export type TodoList = {
     id: string;
     userId: string;
     name: string;

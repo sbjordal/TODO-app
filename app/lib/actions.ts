@@ -4,7 +4,8 @@ import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import postgres from 'postgres';
-import { Task, List } from './definitions';
+import { Task, TodoList } from './definitions';
+import { v4 as uuidv4 } from "uuid";
 
 const sql = postgres(process.env.DATABASE_URL!, { ssl: 'require' });
 
@@ -23,27 +24,50 @@ const CreateTaskSchema = z.object({
 })
 
 export async function createList(formData: FormData) {
-    const { userId, name } = CreateListSchema.parse({
-        userId: formData.get('userId'),
-        name: formData.get('name'),
-    })
+  const { userId, name } = CreateListSchema.parse({
+    userId: formData.get('userId'),
+    name: formData.get('name'),
+  });
 
-    await sql`
-        INSERT INTO "List" ("userId", "name", "createdAt")
-        VALUES (${userId}, ${name}, now())
-        `;
-    revalidatePath(`/dashboard/`);
+  const id = uuidv4(); // generer ny UUID
+
+  await sql`
+    INSERT INTO "List" ("id", "userId", "name", "createdAt", "updatedAt")
+    VALUES (${id}, ${userId}, ${name}, now(), now())
+  `;
+
+  revalidatePath(`/dashboard/`);
+}
+export async function createTask(formData: FormData) {
+  const listId = formData.get('listId') as string;
+  const title = formData.get('title') as string;
+
+  if (!listId || !title) throw new Error('Missing listId or title');
+
+  const id = uuidv4(); // generer ny UUID
+
+  await sql`
+    INSERT INTO "Task" 
+      ("id", "listId", "title", "completed", "tags", "createdAt", "updatedAt") 
+    VALUES 
+      (${id}, ${listId}, ${title}, false, '{}', now(), now())
+  `;
+
+  revalidatePath(`/dashboard/${listId}`);
 }
 
-export async function createTask(formData: FormData) {
-    const { listId, title } = CreateTaskSchema.parse({
-        listId: formData.get('listId'),
-        title: formData.get('title'),
-    })
+export async function toggleTaskCompleted(taskId: string, completed: boolean) {
+  await sql`
+    UPDATE "Task"
+    SET "completed" = ${completed}, "updatedAt" = now()
+    WHERE "id" = ${taskId}
+  `;
+}
 
-    await sql`
-        INSERT INTO "Task" ("listId", "title", "completed", "createdAt")
-        VALUES (${listId}, ${title}, false, now())
-        `;
-    revalidatePath(`/dashboard/${listId}`);
+export async function updateTaskCompleted(taskId: string, completed: boolean) {
+  await sql`
+    UPDATE "Task"
+    SET "completed" = ${completed}, "updatedAt" = now()
+    WHERE "id" = ${taskId}
+  `;
 }

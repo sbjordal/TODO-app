@@ -1,12 +1,21 @@
 import postgres from 'postgres';
-import { List, Task, User } from './definitions';
+import { TodoList, Task, User } from './definitions';
 
 const sql = postgres(process.env.DATABASE_URL!, { ssl: 'require' });
 
 export default sql;
 
+export type TaskRow = {
+  id: string;
+  listId: string;
+  title: string;
+  completed: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
+
 export async function fetchLists(userId: string) {
-    const lists = await sql<List[]>`
+    const lists = await sql<TodoList[]>`
         SELECT *
         FROM "List"
         WHERE "userId" = ${userId}
@@ -17,19 +26,30 @@ export async function fetchLists(userId: string) {
 }
 
 export async function fetchListWithTasks(listId: string) {
-    const list = await sql<List[]>`
+
+    if (!listId){
+        throw new Error('Invalid listId');
+    }
+
+    const lists = await sql<TodoList[]>`
         SELECT *
         FROM "List"
         WHERE "id" = ${listId}
         `;
     
+    const list = lists[0];
+
+    if (!list) {
+        throw new Error('List not found');
+    }
+
     const tasks = await sql<Task[]>`
         SELECT *
         FROM "Task"
         WHERE "listId" = ${listId}
         ORDER BY "createdAt" ASC
         `;
-    return { ...list[0], tasks: tasks ?? [] };
+    return { ...list, tasks: tasks ?? [] };
 
 }
 
