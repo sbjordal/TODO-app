@@ -5,17 +5,27 @@ import { createTask } from "@/app/lib/actions";
 
 export default function TaskForm({ listId }: { listId: string }) {
   const [title, setTitle] = useState("");
+  const [error, setError] = useState("");
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setError("");
 
-    const formData = new FormData();
-    formData.set("listId", listId);
-    formData.set("title", title);
+    try {
+      const formData = new FormData();
+      formData.set("listId", listId);
+      formData.set("title", title);
 
-    await createTask(formData);
-    setTitle("");
-    window.location.reload();
+      await createTask(formData);
+      setTitle("");
+      window.location.reload();
+    } catch (err: any) {
+      if (err?.message) {
+        setError(err.message);
+      } else {
+        setError("Noe gikk galt");
+      }
+    }
   }
 
   return (
@@ -33,6 +43,9 @@ export default function TaskForm({ listId }: { listId: string }) {
       >
         Legg til
       </button>
+      <p className="counter">
+        {title.length}/140 tegn
+      </p>
     </form>
   );
 }
