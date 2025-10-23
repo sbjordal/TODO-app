@@ -34,7 +34,7 @@ body {
   margin-right: 10px;
 }
 
-.task-list button {
+.remove-button {
   background: none;
   border: none;
   color: #d32f2f;
@@ -42,7 +42,7 @@ body {
   cursor: pointer;
 }
 
-.task-list button:hover {
+.remove-button:hover {
   color: #b71c1c;
 }
 

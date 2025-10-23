@@ -71,3 +71,14 @@ export async function updateTaskCompleted(taskId: string, completed: boolean) {
     WHERE "id" = ${taskId}
   `;
 }
+
+export async function deleteTask(taskId: string) {
+  if (!taskId) throw new Error("Mangler taskId");
+
+  await sql`
+    DELETE FROM "Task"
+    WHERE "id" = ${taskId}
+  `;
+
+  revalidatePath("/dashboard");
+}
