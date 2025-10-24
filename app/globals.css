@@ -7,6 +7,7 @@ body {
   background-color: #f4f1fa;
 }
 
+/* === Titles === */
 .page-title {
   font-size: 2rem;
   font-weight: 700;
@@ -30,23 +31,25 @@ body {
   color: #4b367c;
 }
 
+/* === Buttons === */
 .my-button,
 .add-button,
 .small-button {
-  background-color: #9370db;
+  background-color: #9e7ddb;
   color: #fff;
-  font-weight: 600;
+  font-weight: 500;
   border: none;
-  border-radius: 8px;
+  border-radius: 5px;
   cursor: pointer;
   transition: background-color .2s, transform .15s ease, box-shadow .2s;
   box-shadow: 0 2px 4px rgba(0,0,0,.1);
+  padding: .3rem .75rem;
 }
 
 .my-button:hover,
 .add-button:hover,
 .small-button:hover {
-  background-color: #7e5cc4;
+  background-color: #8b6fc4;
   transform: translateY(-1px);
 }
 
@@ -59,24 +62,19 @@ body {
 
 .my-button {
   font-size: 1rem;
-  padding: .75rem 1.5rem;
 }
 
 .add-button {
-  font-size: 1rem;
-  padding: .5rem 1.25rem;
+  font-size: 0.85rem;
 }
 
 .small-button {
   display: inline-block;
-  font-weight: 500;
   font-size: .85rem;
-  padding: .25rem .75rem;
-  border-radius: 6px;
-  box-shadow: 0 1px 3px rgba(0,0,0,.1);
   margin-top: 1rem;
 }
 
+/* === Forms === */
 .form {
   display: flex;
   justify-content: center;
@@ -102,9 +100,10 @@ body {
 }
 
 .counter {
-  color: #6842a1;
+  color: #4b367c;
 }
 
+/* === Task list === */
 .task-list {
   max-width: 500px;
   margin: 2rem auto;
@@ -120,7 +119,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  transition: background-color .2s;
+  transition: background-color .3s ease;
 }
 
 .task-list li:hover {
@@ -131,6 +130,25 @@ body {
   margin-right: 10px;
 }
 
+.task-list li.task-finished {
+  background: #c1bbce; /* ny bakgrunnsfarge for ferdige oppgaver */
+}
+
+.task-list li.task-finished:hover {
+  background: #c8c3cf; 
+}
+
+.task-title {
+  transition: color 0.2s, text-decoration-color 0.2s;
+}
+
+.task-list li.task-finished .task-title {
+  color: #777;
+  text-decoration: line-through;
+  text-decoration-thickness: 1.5px;
+}
+
+/* === Remove button === */
 .remove-button {
   background: none;
   border: none;
@@ -144,18 +162,19 @@ body {
   color: #b71c1c;
 }
 
+/* === Cards === */
 .todo-list-card {
   display: block;
   background-color: #e7e0f5;
   border: 1px solid #c3b5e6;
-  border-radius: 10px;
+  border-radius: 5px;
   padding: 1rem;
   text-decoration: none;
   color: #2e294e;
   cursor: pointer;
   transition: background-color .2s, transform .15s ease, box-shadow .2s;
-  min-height: 80px;
-  max-width: 400px;
+  min-height: 70px;
+  max-width: 300px;
   margin: 1rem;
   box-shadow: 0 2px 4px rgba(0,0,0,.05);
 }
@@ -170,7 +189,7 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   justify-content: center;
-  gap: 1rem;
+  gap: 0.8rem;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -179,4 +198,30 @@ body {
   display: flex;
   justify-content: center;
   margin-top: 3rem;
+}
+
+.task-separator {
+  border: none;
+  border-top: 1px solid #c3b5e6;
+  margin: 12px 0;
+}
+
+.search-icon {
+  width: 24px;   /* 👈 viktig! */
+  height: 24px;  /* 👈 viktig! */
+  color: #4b367c;
+  flex-shrink: 0;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;   /* midtstiller på linja */
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+}
+
+.search-input {
+  width: 300px;
 }

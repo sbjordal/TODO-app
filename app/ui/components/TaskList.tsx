@@ -6,6 +6,7 @@ type Task = {
   id: string;
   title: string;
   completed: boolean;
+  listName?: string; // 👈 valgfri liste-tittel
 };
 
 type Props = {
@@ -31,40 +32,47 @@ export default function TaskList({ tasks }: Props) {
     }
   }
 
-  const sortedTasks = [...tasks].sort((a, b) => { // fullførte tasks flyttes nederst i listen
-    if (a.completed === b.completed) return 0; // 0: Uendret rekkefølge
-    return a.completed ? 1 : -1; //negativt tall: a kommer før b, positivt: b før a
+  const sortedTasks = [...tasks].sort((a, b) => {
+    if (a.completed === b.completed) return 0;
+    return a.completed ? 1 : -1;
   });
+
+  const firstCompletedIndex = sortedTasks.findIndex(task => task.completed);
 
   return (
     <ul className="task-list">
-      {sortedTasks.map((task) => (
-        <li key={task.id}>
-          <div>
-            <input
-              type="checkbox"
-              checked={task.completed}
-              onChange={(e) =>
-                handleToggleCompleted(task.id, e.target.checked)
-              }
-            />
-            <span
-              style={{
-                textDecoration: task.completed ? "line-through" : "none",
-                color: task.completed ? "#777" : "inherit",
-              }}
+      {sortedTasks.map((task, index) => (
+        <div key={task.id}>
+          {index === firstCompletedIndex && firstCompletedIndex !== -1 && (
+            <hr className="task-separator" />
+          )}
+
+          <li className={task.completed ? "task-finished" : ""}>
+            <div>
+              <input
+                type="checkbox"
+                checked={task.completed}
+                onChange={(e) =>
+                  handleToggleCompleted(task.id, e.target.checked)
+                }
+              />
+              <span className="task-title">{task.title}</span>
+              {/* 👇 Vis listetittel bare hvis den finnes */}
+              {task.listName && (
+                <span className="ml-2 text-sm text-gray-600 italic">
+                  ({task.listName})
+                </span>
+              )}
+            </div>
+            <button
+              className="remove-button"
+              onClick={() => handleDelete(task.id)}
+              aria-label={`Slett ${task.title}`}
             >
-              {task.title}
-            </span>
-          </div>
-          <button
-            className="remove-button"
-            onClick={() => handleDelete(task.id)}
-            aria-label={`Slett ${task.title}`}
-          >
-            ×
-          </button>
-        </li>
+              ×
+            </button>
+          </li>
+        </div>
       ))}
     </ul>
   );

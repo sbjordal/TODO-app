@@ -55,22 +55,32 @@ export async function createTask(formData: FormData) {
 }
 
 export async function toggleTaskCompleted(taskId: string, completed: boolean) {
+  const [task] = await sql<{ listId: string }[]>`
+    SELECT "listId" FROM "Task" WHERE "id" = ${taskId}
+  `;
+  if (!task) throw new Error("Fant ikke task");
+
   await sql`
     UPDATE "Task"
     SET "completed" = ${completed}, "updatedAt" = now()
     WHERE "id" = ${taskId}
   `;
 
-  revalidatePath("/dashboard")
+  revalidatePath(`/dashboard/${task.listId}`); //revaliderer page: Oppdaterer innhold
 }
 
 export async function deleteTask(taskId: string) {
   if (!taskId) throw new Error("Mangler taskId");
+
+  const [task] = await sql<{ listId: string }[]>`
+    SELECT "listId" FROM "Task" WHERE "id" = ${taskId}
+  `;
+  if (!task) throw new Error("Fant ikke task");
 
   await sql`
     DELETE FROM "Task"
     WHERE "id" = ${taskId}
   `;
 
-  revalidatePath("/dashboard");
+  revalidatePath(`/dashboard/${task.listId}`); //revaliderer page: Oppdaterer innhold
 }
