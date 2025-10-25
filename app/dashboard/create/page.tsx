@@ -1,7 +1,7 @@
-import ListForm from "../../ui/components/ListForm";
+import CreateListForm from "../../ui/components/CreateListForm";
 import { fetchUser, fetchLists } from "@/app/lib/data";
-import MyButton from "@/app/ui/components/MyButton";
-import { ChevronLeftIcon } from "@heroicons/react/24/outline";
+import AppButton from "@/app/ui/components/AppButton";
+import { HomeIcon } from "@heroicons/react/24/outline";
 
 export default async function CreateListPage() {
   const user = await fetchUser();
@@ -25,13 +25,13 @@ export default async function CreateListPage() {
         <p className="page-subtitle">Du har ingen lister enda</p>
       )}
 
-      <ListForm userId={user.id} />
+      <CreateListForm userId={user.id} />
       <div className="center-container">
-        <MyButton
+        <AppButton
           path="/dashboard"
           label="Tilbake"
           className="my-button"
-          icon={<ChevronLeftIcon className="button-icon" />}
+          icon={<HomeIcon className="button-icon" />}
         />
       </div>
     </main>

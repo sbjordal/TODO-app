@@ -10,7 +10,7 @@ body {
 /* === Titles === */
 .page-title {
   font-size: 2rem;
-  font-weight: 700;
+  font-weight: 500;
   color: #4b367c;
   margin-bottom: 1rem;
   text-align: center;
@@ -24,8 +24,7 @@ body {
   margin-bottom: 1rem;
 }
 
-.card-title,
-.todo-list-card-title {
+.list-card-title{
   font-size: 1.4rem;
   font-weight: 600;
   color: #4b367c;
@@ -143,13 +142,15 @@ body {
   justify-content: center;
   transition: transform 0.15s ease;
   flex-shrink: 0;  
+  box-shadow: none !important;
 }
 
 .remove-button:hover {
   transform: scale(1.1);
+  background: none;  
 }
 /* === Cards === */
-.todo-list-card {
+.list-card {
   display: block;
   background-color: #e7e0f5;
   border: 1px solid #c3b5e6;
@@ -165,7 +166,7 @@ body {
   box-shadow: 0 2px 4px rgba(0,0,0,.05);
 }
 
-.todo-list-card:hover {
+.list-card:hover {
   background-color: #d7c7f0;
   transform: translateY(-3px);
   box-shadow: 0 6px 12px rgba(0,0,0,.08);

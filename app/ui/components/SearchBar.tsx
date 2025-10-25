@@ -11,7 +11,7 @@ type Props = {
   tasks?: (Task & { listName?: string })[]; // 👈 Ny prop
 };
 
-export default function Search({ placeholder = 'Søk...', tasks }: Props) {
+export default function SearchBar({ placeholder = 'Søk...', tasks }: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -19,7 +19,6 @@ export default function Search({ placeholder = 'Søk...', tasks }: Props) {
   const initial = searchParams.get('q') ?? '';
   const [term, setTerm] = useState(initial);
 
-  // Oppdater URL når man trykker på knappen eller Enter
   const handleSearch = () => {
     const params = new URLSearchParams(searchParams);
     if (term) {

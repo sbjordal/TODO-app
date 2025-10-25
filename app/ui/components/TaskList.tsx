@@ -1,8 +1,8 @@
 "use client";
 
 import { deleteTask, toggleTaskCompleted } from "@/app/lib/actions";
-import DeleteButton from "@/app/ui/components/DeleteButton";
 import { TrashIcon } from "@heroicons/react/24/outline";
+import AppButton from "@/app/ui/components/AppButton";
 
 type Task = {
   id: string;
@@ -65,14 +65,12 @@ export default function TaskList({ tasks }: Props) {
                 </span>
               )}
             </div>
-            <button
+            <AppButton
               className="remove-button"
               onClick={() => handleDelete(task.id)}
-              aria-label={`Slett ${task.title}`}
-            >
-              <TrashIcon 
-              className="trash-icon" />
-            </button>
+              label=""
+              icon={<TrashIcon className="trash-icon" />}
+            />
           </li>
         </div>
       ))}

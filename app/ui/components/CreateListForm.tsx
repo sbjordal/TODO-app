@@ -5,7 +5,7 @@ import { createList } from "@/app/lib/actions";
 import { useRouter } from "next/navigation";
 import { PlusIcon } from "@heroicons/react/24/outline"; 
 
-export default function ListForm({ userId }: { userId: string }) {
+export default function CreateListForm({ userId }: { userId: string }) {
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");

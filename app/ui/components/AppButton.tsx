@@ -3,18 +3,23 @@
 import { useRouter } from "next/navigation";
 import React from "react";
 
-type MyButtonProps = {
-  path: string;
+type Props = {
+  path?: string;
   label: string;
   className?: string;
   icon?: React.ReactNode;  
+  onClick?: () => void;
 };
 
-export default function MyButton({ path, label, className, icon }: MyButtonProps) {
+export default function AppButton({ path, label, className, icon, onClick}: Props) {
   const router = useRouter();
 
   const handleClick = () => {
-    router.push(path);
+    if (onClick) {
+      onClick();
+    } else if (path) {
+      router.push(path);
+    }
   };
 
   return (

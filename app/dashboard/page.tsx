@@ -1,8 +1,8 @@
-import TodoListCard from "@/app/ui/components/TodoListCard";
-import Search from "@/app/ui/components/Search";
+import ListCard from "@/app/ui/components/ListCard";
+import SearchBar from "@/app/ui/components/SearchBar";
 import { fetchUser, fetchLists, fetchTasksByUser } from "@/app/lib/data";
 import { TodoList, Task } from "@/app/lib/definitions";
-import MyButton from "@/app/ui/components/MyButton";
+import AppButton from "@/app/ui/components/AppButton";
 import { PlusIcon } from "@heroicons/react/24/outline"; 
 
 export default async function DashboardPage() {
@@ -24,21 +24,19 @@ export default async function DashboardPage() {
           Du har ingen lister enda.</p>
         ) : (
           lists.map((list) => 
-          <TodoListCard key={list.id} list={list} />)
+          <ListCard key={list.id} list={list} />)
         )}
       </div>
 
       <div className="center-container">
-        <MyButton 
+        <AppButton 
         path="/dashboard/create"
         label="Opprett ny liste"
         className="my-button"
-        icon={<PlusIcon className="button-icon" />}/>
-        
+        icon={<PlusIcon className="button-icon flex justify=center" />}/>
       </div>
-
-      <div className="mt-10 flex justify-center">
-        <Search placeholder="Søk i alle oppgaver..." tasks={tasks} />
+      <div className="center-container">
+        <SearchBar placeholder="Søk i alle oppgaver..." tasks={tasks} />
       </div>
     </main>
   );

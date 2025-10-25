@@ -19,6 +19,7 @@ Appen lar brukere lage lister, legge til oppgaver, merke dem som ferdig, og slet
 - [PostgreSQL](https://www.postgresql.org/)
 - [Zod](https://zod.dev/) (skjema- og inputvalidering)
 - [Tailwind CSS](https://tailwindcss.com/) + egendefinerte klasser
+- [Heroicons](https://heroicons.com/) (ikoner)
 - UUID for ID-generering
 
 ## Komponenter

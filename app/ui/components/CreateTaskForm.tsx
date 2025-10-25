@@ -4,7 +4,7 @@ import { useState } from "react";
 import { createTask } from "@/app/lib/actions";
 import { PlusIcon } from "@heroicons/react/24/outline"; 
 
-export default function TaskForm({ listId }: { listId: string }) {
+export default function CreateTaskForm({ listId }: { listId: string }) {
   const [title, setTitle] = useState("");
   const [error, setError] = useState("");
 
