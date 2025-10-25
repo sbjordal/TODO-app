@@ -1,7 +1,8 @@
 import { fetchListWithTasks } from "@/app/lib/data";
 import TaskForm from "../../ui/components/TaskForm";
 import TaskList from "../../ui/components/TaskList";
-import BackToDashboardButton from "@/app/ui/components/BackToDashboardButton";
+import MyButton from "@/app/ui/components/MyButton";
+import { ChevronLeftIcon } from "@heroicons/react/24/outline";
 
 type Props = {
   params: { listId: string };
@@ -24,7 +25,14 @@ export default async function ListPage({ params }: Props) {
 
       <TaskList tasks={list.tasks} />
       <TaskForm listId={list.id} />
-      <BackToDashboardButton/>
+      <div className="center-container">
+        <MyButton
+        path="/dashboard"
+        label="Tilbake"
+        icon={<ChevronLeftIcon className="button-icon" />}
+        className="my-button"
+        />
+      </div>
     </div>
     
   );

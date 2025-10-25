@@ -32,9 +32,7 @@ body {
 }
 
 /* === Buttons === */
-.my-button,
-.add-button,
-.small-button {
+.my-button {
   background-color: #9e7ddb;
   color: #fff;
   font-weight: 500;
@@ -46,32 +44,19 @@ body {
   padding: .3rem .75rem;
 }
 
-.my-button:hover,
-.add-button:hover,
-.small-button:hover {
+.my-button:hover
+{
   background-color: #8b6fc4;
   transform: translateY(-1px);
 }
 
-.my-button:active,
-.add-button:active,
-.small-button:active {
+.my-button:active {
   background-color: #6842a1;
   transform: translateY(0);
 }
 
 .my-button {
   font-size: 1rem;
-}
-
-.add-button {
-  font-size: 0.85rem;
-}
-
-.small-button {
-  display: inline-block;
-  font-size: .85rem;
-  margin-top: 1rem;
 }
 
 /* === Forms === */
@@ -148,20 +133,21 @@ body {
   text-decoration-thickness: 1.5px;
 }
 
-/* === Remove button === */
 .remove-button {
   background: none;
   border: none;
-  color: #d32f2f;
-  font-size: 20px;
   cursor: pointer;
-  transition: color .2s;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s ease;
+  flex-shrink: 0;  
 }
 
 .remove-button:hover {
-  color: #b71c1c;
+  transform: scale(1.1);
 }
-
 /* === Cards === */
 .todo-list-card {
   display: block;
@@ -194,7 +180,7 @@ body {
   margin: 0 auto;
 }
 
-.create-list-container {
+.center-container {
   display: flex;
   justify-content: center;
   margin-top: 3rem;
@@ -224,4 +210,21 @@ body {
 
 .search-input {
   width: 300px;
+}
+
+.trash-icon {
+  width: 22px;
+  height: 22px;
+  stroke: #4b367c;       
+  stroke-width: 1.5;    
+  flex-shrink: 0;       
+  pointer-events: none;  
+}
+
+.button-icon {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2;
+  flex-shrink: 0;
+  margin-right: 0.5rem;
 }

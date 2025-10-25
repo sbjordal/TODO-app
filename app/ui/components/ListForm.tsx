@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { createList } from "@/app/lib/actions";
 import { useRouter } from "next/navigation";
+import { PlusIcon } from "@heroicons/react/24/outline"; 
 
 export default function ListForm({ userId }: { userId: string }) {
   const [name, setName] = useState("");
@@ -42,7 +43,10 @@ export default function ListForm({ userId }: { userId: string }) {
         className="input"
       />
       <button
-        type="submit" disabled={loading} className="add-button">
+        type="submit" 
+        disabled={loading} 
+        className="my-button flex items-center">
+        <PlusIcon className="button-icon" />
         {loading ? "Lagrer..." : "Lag liste"}
       </button>
     </form>

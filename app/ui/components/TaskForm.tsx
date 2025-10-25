@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { createTask } from "@/app/lib/actions";
+import { PlusIcon } from "@heroicons/react/24/outline"; 
 
 export default function TaskForm({ listId }: { listId: string }) {
   const [title, setTitle] = useState("");
@@ -39,8 +40,9 @@ export default function TaskForm({ listId }: { listId: string }) {
       />
       <button
         type="submit"
-        className="add-button"
+        className="my-button flex items-center"
       >
+        <PlusIcon className="button-icon mr-2" />
         Legg til
       </button>
       <p className="counter">

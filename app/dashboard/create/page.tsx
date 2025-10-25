@@ -1,6 +1,7 @@
 import ListForm from "../../ui/components/ListForm";
 import { fetchUser, fetchLists } from "@/app/lib/data";
-import BackToDashboardButton from "@/app/ui/components/BackToDashboardButton";
+import MyButton from "@/app/ui/components/MyButton";
+import { ChevronLeftIcon } from "@heroicons/react/24/outline";
 
 export default async function CreateListPage() {
   const user = await fetchUser();
@@ -25,7 +26,14 @@ export default async function CreateListPage() {
       )}
 
       <ListForm userId={user.id} />
-      <BackToDashboardButton />
+      <div className="center-container">
+        <MyButton
+          path="/dashboard"
+          label="Tilbake"
+          className="my-button"
+          icon={<ChevronLeftIcon className="button-icon" />}
+        />
+      </div>
     </main>
   );
 }

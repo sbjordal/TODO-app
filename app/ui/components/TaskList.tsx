@@ -1,12 +1,14 @@
 "use client";
 
 import { deleteTask, toggleTaskCompleted } from "@/app/lib/actions";
+import DeleteButton from "@/app/ui/components/DeleteButton";
+import { TrashIcon } from "@heroicons/react/24/outline";
 
 type Task = {
   id: string;
   title: string;
   completed: boolean;
-  listName?: string; // 👈 valgfri liste-tittel
+  listName?: string; 
 };
 
 type Props = {
@@ -57,7 +59,6 @@ export default function TaskList({ tasks }: Props) {
                 }
               />
               <span className="task-title">{task.title}</span>
-              {/* 👇 Vis listetittel bare hvis den finnes */}
               {task.listName && (
                 <span className="ml-2 text-sm text-gray-600 italic">
                   ({task.listName})
@@ -69,7 +70,8 @@ export default function TaskList({ tasks }: Props) {
               onClick={() => handleDelete(task.id)}
               aria-label={`Slett ${task.title}`}
             >
-              ×
+              <TrashIcon 
+              className="trash-icon" />
             </button>
           </li>
         </div>
