@@ -132,7 +132,7 @@ body {
   text-decoration-thickness: 1.5px;
 }
 
-.remove-button {
+.icon-button {
   background: none;
   border: none;
   cursor: pointer;
@@ -145,7 +145,7 @@ body {
   box-shadow: none !important;
 }
 
-.remove-button:hover {
+.icon-button:hover {
   transform: scale(1.1);
   background: none;  
 }
@@ -193,13 +193,6 @@ body {
   margin: 12px 0;
 }
 
-.search-icon {
-  width: 24px;   /* 👈 viktig! */
-  height: 24px;  /* 👈 viktig! */
-  color: #4b367c;
-  flex-shrink: 0;
-}
-
 .search-container {
   display: flex;
   align-items: center;
@@ -213,7 +206,7 @@ body {
   width: 300px;
 }
 
-.trash-icon {
+.icon {
   width: 22px;
   height: 22px;
   stroke: #4b367c;       

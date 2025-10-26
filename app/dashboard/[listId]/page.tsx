@@ -19,9 +19,7 @@ export default async function ListPage({ params }: Props) {
 
   return (
     <div className="page-container">
-      <h1 className="page-title">
-        {list.name}
-      </h1>
+      <h1 className="page-title">{list.name}</h1>
 
       <TaskList tasks={list.tasks} />
       <CreateTaskForm listId={list.id} />

@@ -1,43 +1,63 @@
 "use client";
 
-import { deleteTask, toggleTaskCompleted } from "@/app/lib/actions";
-import { TrashIcon } from "@heroicons/react/24/outline";
-import AppButton from "@/app/ui/components/AppButton";
+import { useState } from "react";
+import { deleteTask, toggleTaskCompleted, updateTask } from "@/app/lib/actions";
+import { Task } from "@/app/lib/definitions"
+import TaskItem from "./TaskItem";
 
-type Task = {
-  id: string;
-  title: string;
-  completed: boolean;
-  listName?: string; 
-};
-
-type Props = {
-  tasks: Task[];
-};
+type TaskWithListName = Task &{ listName?: string; };
+type Props = { tasks: TaskWithListName[];};
 
 export default function TaskList({ tasks }: Props) {
-  async function handleDelete(taskId: string) {
+  const [taskList, setTaskList] = useState<TaskWithListName[]>(tasks);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editTitle, setEditTitle] = useState("");
+
+  // Handlers
+  async function handleDelete(id: string) {
     try {
-      await deleteTask(taskId);
-      window.location.reload();
+      await deleteTask(id);
+      setTaskList((prev) => prev.filter((task) => task.id !== id));
     } catch (err) {
       console.error("Kunne ikke slette task:", err);
     }
   }
 
-  async function handleToggleCompleted(taskId: string, completed: boolean) {
+  async function handleToggleCompleted(id: string, completed: boolean) {
     try {
-      await toggleTaskCompleted(taskId, completed);
-      window.location.reload();
+      await toggleTaskCompleted(id, completed);
+      setTaskList((prev) =>
+      prev.map((task) =>
+        task.id === id ? { ...task, completed } : task
+      )
+    );
     } catch (err) {
       console.error("Kunne ikke oppdatere task:", err);
     }
   }
 
-  const sortedTasks = [...tasks].sort((a, b) => {
-    if (a.completed === b.completed) return 0;
-    return a.completed ? 1 : -1;
-  });
+  async function handleSaveEdit(id: string) {
+    if (!editTitle.trim()) return;
+    try {
+      await updateTask(id, editTitle);
+      setTaskList((prev) =>
+      prev.map((task) =>
+        task.id === id ? { ...task, title: editTitle } : task
+      )
+    );
+      setEditingId(null);
+      setEditTitle("");
+      
+    } catch (err) {
+      console.error("Kunne ikke oppdatere tittel:", err);
+    }
+  }
+
+  //Sortering og rendering
+  const sortedTasks = [...taskList].sort((a, b) => {
+  if (a.completed === b.completed) return 0;
+  return a.completed ? 1 : -1;
+});
 
   const firstCompletedIndex = sortedTasks.findIndex(task => task.completed);
 
@@ -48,30 +68,23 @@ export default function TaskList({ tasks }: Props) {
           {index === firstCompletedIndex && firstCompletedIndex !== -1 && (
             <hr className="task-separator" />
           )}
-
-          <li className={task.completed ? "task-finished" : ""}>
-            <div>
-              <input
-                type="checkbox"
-                checked={task.completed}
-                onChange={(e) =>
-                  handleToggleCompleted(task.id, e.target.checked)
-                }
-              />
-              <span className="task-title">{task.title}</span>
-              {task.listName && (
-                <span className="ml-2 text-sm text-gray-600 italic">
-                  ({task.listName})
-                </span>
-              )}
-            </div>
-            <AppButton
-              className="remove-button"
-              onClick={() => handleDelete(task.id)}
-              label=""
-              icon={<TrashIcon className="trash-icon" />}
-            />
-          </li>
+          <TaskItem
+            task={task}
+            isEditing={editingId === task.id}
+            editTitle={editTitle}
+            onToggle={handleToggleCompleted}
+            onChangeEdit={setEditTitle}
+            onSaveEdit={handleSaveEdit}
+            onEditStart={(id, title) => {
+              setEditingId(id);
+              setEditTitle(title);
+            }}
+            onEditCancel={() => {
+              setEditingId(null);
+              setEditTitle("");
+            }}
+            onDelete={handleDelete}
+          />
         </div>
       ))}
     </ul>

@@ -43,7 +43,7 @@ export default function SearchBar({ placeholder = 'Søk...', tasks }: Props) {
   return (
     <div className="w-full flex flex-col items-center">
       <div className="search-container">
-        <MagnifyingGlassIcon className="search-icon" />
+        <MagnifyingGlassIcon className="icon" />
         <input
           type="text"
           placeholder={placeholder}

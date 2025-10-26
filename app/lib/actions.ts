@@ -84,3 +84,12 @@ export async function deleteTask(taskId: string) {
 
   revalidatePath(`/dashboard/${task.listId}`); //revaliderer page: Oppdaterer innhold
 }
+
+
+export async function updateTask(taskId: string, newTitle: string) {
+  await sql`
+    UPDATE "Task"
+    SET "title" = ${newTitle}
+    WHERE "id" = ${taskId}
+  `;
+}
