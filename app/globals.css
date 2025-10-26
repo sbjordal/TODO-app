@@ -116,7 +116,7 @@ body {
 }
 
 .task-list li.task-finished {
-  background: #c1bbce; /* ny bakgrunnsfarge for ferdige oppgaver */
+  background: #c1bbce; 
 }
 
 .task-list li.task-finished:hover {

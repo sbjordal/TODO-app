@@ -9,6 +9,27 @@ import ErrorBanner from "./ErrorBanner";
 type TaskWithListName = Task &{ listName?: string; };
 type Props = { tasks: TaskWithListName[];};
 
+/**
+ * @component TaskList
+ *
+ * Viser og håndterer en liste av oppgaver, inkludert:
+ * - Vise oppgaver sortert etter fullført-status
+ * - Redigere, fullføre og slette oppgaver
+ * - Vise skillelinje mellom aktive og fullførte oppgaver
+ * - Håndtere og vise feil med `ErrorBanner`
+ *
+ * Funksjonalitet:
+ * - Oppgaver sorteres slik at ufullførte vises først.
+ * - Endringer oppdateres lokalt i state og i databasen via `actions`.
+ * - Støtter inline-redigering gjennom `TaskItem`.
+ *
+ * Props:
+ * - `tasks` (TaskWithListName[], required): Liste over oppgaver som skal vises.
+ *
+ * Bruk:
+ * Brukes på både dashbord og listesider for å vise og manipulere oppgaver.
+ */
+
 export default function TaskList({ tasks }: Props) {
   const [taskList, setTaskList] = useState<TaskWithListName[]>(tasks);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -39,7 +60,7 @@ export default function TaskList({ tasks }: Props) {
       setError(result.message ?? "Kunne ikke oppdatere oppgaven.");
       return;
     }
-    setTaskList((prev) => prev.map((task) =>
+    setTaskList((prev) =>prev.map((task) =>
       task.id === id ? { ...task, completed } : task
     )
   );

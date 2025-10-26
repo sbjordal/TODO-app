@@ -8,8 +8,27 @@ import { Task } from '@/app/lib/definitions';
 
 type Props = {
   placeholder?: string;
-  tasks?: (Task & { listName?: string })[]; // 👈 Ny prop
+  tasks?: (Task & { listName?: string })[];
 };
+
+/**
+ * @component SearchBar
+ *
+ * En søkekomponent som lar brukeren filtrere oppgaver på tvers av lister.
+ * 
+ * Funksjonalitet:
+ * - Søker etter oppgaver basert på tittel.
+ * - Oppdaterer URL med søkeparameter (`?q=...`) slik at søk kan deles eller beholdes ved navigasjon.
+ * - Viser resultatliste i sanntid med `TaskList`.
+ * - Viser melding dersom ingen oppgaver matcher søket.
+ *
+ * Props:
+ * - `placeholder` (string, optional): Tekst som vises i søkefeltet. Default: `"Søk..."`.
+ * - `tasks` (Task[], optional): Liste over oppgaver som skal kunne søkes i.
+ *
+ * Bruk:
+ * Brukes på dashbordet for å søke i oppgaver på tvers av alle lister.
+ */
 
 export default function SearchBar({ placeholder = 'Søk...', tasks }: Props) {
   const router = useRouter();

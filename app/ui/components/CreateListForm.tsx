@@ -6,6 +6,22 @@ import { useRouter } from "next/navigation";
 import ErrorBanner from "./ErrorBanner";
 import { PlusIcon } from "@heroicons/react/24/outline"; 
 
+/**
+ * @component CreateListForm
+ * 
+ * Skjema for å opprette en ny liste for en gitt bruker.
+ * 
+ * Sender data til `createList`-action og viser feilmelding ved validerings- eller serverfeil.
+ * Oppdaterer siden ved vellykket innsending.
+ * 
+ * Props:
+ * - `userId` (string, required): ID-en til brukeren som listen skal tilhøre.
+ * 
+ * Funksjonalitet:
+ * - Viser inputfelt og knapp
+ * - Håndterer innsending og feilmeldinger
+ */
+
 export default function CreateListForm({ userId }: { userId: string }) {
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);

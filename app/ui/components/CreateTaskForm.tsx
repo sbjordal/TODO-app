@@ -6,6 +6,24 @@ import { createTask } from "@/app/lib/actions";
 import ErrorBanner from "./ErrorBanner";
 import { PlusIcon } from "@heroicons/react/24/outline"; 
 
+/**
+ * @component CreateTaskForm
+ * 
+ * Skjema for å opprette en ny oppgave i en spesifikk liste.
+ * 
+ * Sender data til `createTask`-action og viser feilmeldinger ved valideringsfeil eller serverfeil.
+ * Oppdaterer siden ved vellykket innsending.
+ * 
+ * Props:
+ * - `listId` (string, required): ID-en til listen oppgaven skal legges til i.
+ * 
+ * Funksjonalitet:
+ * - Inputfelt for oppgavetittel (maks 140 tegn)
+ * - Teller antall tegn
+ * - Håndterer innsending og feil
+ * - Oppdaterer visningen etter opprettelse
+ */
+
 export default function CreateTaskForm({ listId }: { listId: string } ) {
   const [title, setTitle] = useState("");
   const [error, setError] = useState<string | null>(null);

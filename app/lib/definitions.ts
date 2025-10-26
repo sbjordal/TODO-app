@@ -3,20 +3,21 @@ export type Task = {
     listId: string; //koblet til listen oppgaven tilhører
     title: string;
     completed: boolean;
-    dueDate?: string | null;
-    tags?: string[];
-    createdAt: string;
-    updatedAt?: string | null;
+    dueDate?: Date | null;
+    tags?: any;
+    createdAt: Date;
+    updatedAt?: Date | null;
 }
 
 export type TodoList = {
-    id: string;
-    userId: string;
-    name: string;
-    createdAt: string;
-    updatedAt?: string | null;
-    tasks?: Task[];
-}
+  id: string;
+  userId: string;
+  name: string;
+  createdAt: Date;
+  updatedAt?: Date | null;
+  tasks?: Task[];
+};
+
 
 export type User = { //ønsker å ha flere brukere etterhvert
     id: string;
@@ -24,7 +25,7 @@ export type User = { //ønsker å ha flere brukere etterhvert
     lastname: string;
     email: string;
     password: string;
-    createdAt: string;
-    updatedAt?: string | null;
+    createdAt: Date;
+    updatedAt?: Date | null;
 }
 

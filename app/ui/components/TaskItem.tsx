@@ -18,6 +18,29 @@ type Props = {
     onDelete: (id: string) => void;
 };
 
+/**
+ * @component TaskItem
+ *
+ * Viser én enkelt oppgave med funksjonalitet for å:
+ * - Markere som fullført / ikke fullført
+ * - Redigere tittel
+ * - Avbryte redigering
+ * - Slette oppgaven
+ *
+ * Brukes i oppgavelister for å vise og håndtere individuelle oppgaver.
+ *
+ * Props:
+ * - `task` (TaskWithListName, required): Oppgaveobjekt med tittel, status og ev. tilhørende listenavn.
+ * - `isEditing` (boolean): Angir om oppgaven er i redigeringsmodus.
+ * - `editTitle` (string): Midlertidig verdi under redigering.
+ * - `onToggle` (function): Kalles når brukeren markerer oppgaven som fullført eller ikke.
+ * - `onChangeEdit` (function): Oppdaterer `editTitle` når brukeren skriver.
+ * - `onSaveEdit` (function): Kalles ved lagring av ny tittel.
+ * - `onEditStart` (function): Aktiverer redigeringsmodus.
+ * - `onEditCancel` (function): Avbryter redigering uten endringer.
+ * - `onDelete` (function): Sletter oppgaven.
+ */
+
 export default function TaskItem({
   task,
   isEditing,

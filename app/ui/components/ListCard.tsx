@@ -14,6 +14,27 @@ type Props = {
   };
 };
 
+/**
+ * @component ListCard
+ * 
+ * Viser en enkelt liste med tittel og handlingsknapper for redigering og sletting.
+ * 
+ * Funksjonalitet:
+ * - Viser listenavnet med lenke til detaljsiden.
+ * - Lar brukeren redigere navnet på listen direkte i kortet.
+ * - Lar brukeren slette listen.
+ * - Viser feilmeldinger ved feil under oppdatering eller sletting.
+ * 
+ * Props:
+ * - `list` (object, required): Objekt med:
+ *    - `id` (string): ID for listen.
+ *    - `name` (string): Navnet på listen.
+ * 
+ * Handlinger:
+ * - `updateList` kalles når brukeren lagrer endringer.
+ * - `deleteList` kalles når brukeren sletter listen.
+ */
+
 export default function ListCard({ list }: Props) {
   const [editing, setEditing] = useState(false);
   const [newName, setNewName] = useState(list.name);

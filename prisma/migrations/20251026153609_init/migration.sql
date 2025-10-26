@@ -5,7 +5,7 @@ CREATE TABLE "Task" (
     "title" TEXT NOT NULL,
     "completed" BOOLEAN NOT NULL,
     "dueDate" DATETIME,
-    "tags" TEXT NOT NULL DEFAULT '[]',
+    "tags" JSONB NOT NULL DEFAULT [],
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL,
     CONSTRAINT "Task_listId_fkey" FOREIGN KEY ("listId") REFERENCES "List" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
