@@ -4,7 +4,6 @@ import { z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import postgres from 'postgres';
 import { v4 as uuidv4 } from "uuid";
-import { AppError } from './errors';
 
 const sql = postgres(process.env.DATABASE_URL!, { ssl: 'require' });
 
@@ -164,4 +163,3 @@ export async function deleteTask(taskId: string) {
    return { success: false, status: 500, message: "Uventet feil på server" };
   }
 }
-
