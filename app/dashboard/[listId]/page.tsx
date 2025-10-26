@@ -1,7 +1,7 @@
 import { fetchListWithTasks } from "@/app/lib/data";
 import CreateTaskForm from "../../ui/components/CreateTaskForm";
 import TaskList from "../../ui/components/TaskList";
-import MyButton from "@/app/ui/components/AppButton";
+import AppButton from "@/app/ui/components/AppButton";
 import { HomeIcon } from "@heroicons/react/24/outline";
 
 type Props = {
@@ -24,7 +24,7 @@ export default async function ListPage({ params }: Props) {
       <TaskList tasks={list.tasks} />
       <CreateTaskForm listId={list.id} />
       <div className="center-container">
-        <MyButton
+        <AppButton
         path="/dashboard"
         label="Tilbake"
         icon={<HomeIcon className="button-icon" />}

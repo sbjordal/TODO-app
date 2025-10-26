@@ -161,6 +161,7 @@ body {
   cursor: pointer;
   transition: background-color .2s, transform .15s ease, box-shadow .2s;
   min-height: 70px;
+  width: 100%; 
   max-width: 300px;
   margin: 1rem;
   box-shadow: 0 2px 4px rgba(0,0,0,.05);
@@ -175,7 +176,7 @@ body {
 .list-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  justify-content: center;
+  justify-items: center;
   gap: 0.8rem;
   max-width: 1200px;
   margin: 0 auto;
