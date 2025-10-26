@@ -29,6 +29,10 @@ const UpdateTaskSchema = z.object({
     .max(140, 'Title can be max 140 characters'),
 });
 
+const UpdateListSchema = z.object({
+  name: z.string().min(1, "List name must be at least 1 character").max(140, "List name can be max 140 characters"),
+});
+
 function getZodMessage(err: z.ZodError) {
   return err.issues[0]?.message ?? 'Ugyldig input';
 }
@@ -161,5 +165,53 @@ export async function deleteTask(taskId: string) {
   } catch (err){
     console.error('Uventet feil:', err);
    return { success: false, status: 500, message: "Uventet feil på server" };
+  }
+}
+
+export async function updateList(listId: string, newName: string) {
+  try {
+    UpdateListSchema.parse({ name: newName });
+
+    const [list] = await sql<{ id: string }[]>`
+      SELECT "id" FROM "List" WHERE "id" = ${listId}
+    `;
+    if (!list) return { success: false, status: 400, message: 'Mangler listId' };
+
+    await sql`
+      UPDATE "List"
+      SET "name" = ${newName}, "updatedAt" = now()
+      WHERE "id" = ${listId}
+    `;
+
+    revalidatePath("/dashboard");
+    return { success: true };
+  } catch (err) {
+    if (err instanceof z.ZodError) {
+      return { success: false, status: 422, message: err.issues[0]?.message };
+    }
+    console.error("Uventet feil:", err);
+    return { success: false, status: 500, message: "Uventet feil på server" };
+  }
+}
+
+export async function deleteList(listId: string) {
+  try {
+    if (!listId) return { success: false, status: 400, message: 'Mangler listId' };
+
+    const [list] = await sql<{ id: string }[]>`
+      SELECT "id" FROM "List" WHERE "id" = ${listId}
+    `;
+    if (!list) return { success: false, status: 404, message: 'Fant ikke listen' }; //404: Not found
+
+    await sql`
+      DELETE FROM "List"
+      WHERE "id" = ${listId}
+    `;
+
+    revalidatePath("/dashboard");
+    return { success: true };
+  } catch (err) {
+    console.error("Uventet feil:", err);
+    return { success: false, status: 500, message: "Uventet feil på server" };
   }
 }
