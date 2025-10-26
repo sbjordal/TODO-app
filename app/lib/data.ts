@@ -1,118 +1,123 @@
-import postgres from 'postgres';
-import { Task, TodoList, User } from './definitions';
-import { AppError } from './errors';
+import { prisma } from "./prisma";
+import { Task, TodoList, User } from "./definitions";
+import { AppError } from "./errors";
 
-const sql = postgres(process.env.DATABASE_URL!, { ssl: 'require' });
-
-export default sql;
-
+/**
+ * Henter alle lister for en gitt bruker
+ */
 export async function fetchLists(userId: string) {
-  if (!userId) throw new AppError(400, 'Mangler bruker-ID');
+  if (!userId) throw new AppError(400, "Mangler bruker-ID");
 
   try {
-    const lists = await sql<TodoList[]>`
-      SELECT *
-      FROM "List"
-      WHERE "userId" = ${userId}
-      ORDER BY "createdAt" DESC
-    `;
+    const lists = await prisma.list.findMany({
+      where: { userId },
+      orderBy: { createdAt: "desc" },
+    });
+
     return lists;
   } catch (err) {
-    console.error('Databasefeil ved henting av lister:', err);
-    throw new AppError(500, 'Kunne ikke hente lister');
+    console.error("Databasefeil ved henting av lister:", err);
+    throw new AppError(500, "Kunne ikke hente lister");
   }
 }
 
+/**
+ * Henter en spesifikk liste med alle tilhørende tasks
+ */
 export async function fetchListWithTasks(listId: string) {
-  if (!listId) throw new AppError(400, 'Mangler listId');
+  if (!listId) throw new AppError(400, "Mangler listId");
 
   try {
-    const lists = await sql<TodoList[]>`
-      SELECT *
-      FROM "List"
-      WHERE "id" = ${listId}
-    `;
+    const list = await prisma.list.findUnique({
+      where: { id: listId },
+      include: {
+        tasks: {
+          orderBy: { createdAt: "asc" },
+        },
+      },
+    });
 
-    const list = lists[0];
-    if (!list) throw new AppError(404, 'Fant ikke listen');
+    if (!list) throw new AppError(404, "Fant ikke listen");
 
-    const tasks = await sql<Task[]>`
-      SELECT *
-      FROM "Task"
-      WHERE "listId" = ${listId}
-      ORDER BY "createdAt" ASC
-    `;
-
-    return { ...list, tasks: tasks ?? [] };
+    return list;
   } catch (err) {
-    console.error('Databasefeil ved henting av liste med oppgaver:', err);
-    throw new AppError(500, 'Kunne ikke hente liste');
+    console.error("Databasefeil ved henting av liste med oppgaver:", err);
+    throw new AppError(500, "Kunne ikke hente liste");
   }
 }
 
+/**
+ * Henter alle tasks for en bruker (gjennom listene)
+ */
 export async function fetchTasksByUser(userId: string) {
-  if (!userId) throw new AppError(400, 'Mangler bruker-ID');
+  if (!userId) throw new AppError(400, "Mangler bruker-ID");
 
   try {
-    const tasks = await sql<Task[]>`
-      SELECT t.*
-      FROM "Task" t
-      JOIN "List" l ON t."listId" = l."id"
-      WHERE l."userId" = ${userId}
-      ORDER BY t."createdAt" ASC
-    `;
+    const tasks = await prisma.task.findMany({
+      where: {
+        list: {
+          userId,
+        },
+      },
+      orderBy: { createdAt: "asc" },
+    });
+
     return tasks;
   } catch (err) {
-    console.error('Databasefeil ved henting av brukerens tasks:', err);
-    throw new AppError(500, 'Kunne ikke hente oppgaver');
+    console.error("Databasefeil ved henting av brukerens tasks:", err);
+    throw new AppError(500, "Kunne ikke hente oppgaver");
   }
 }
 
+/**
+ * Henter én spesifikk task
+ */
 export async function fetchTask(taskId: string) {
-  if (!taskId) throw new AppError(400, 'Mangler taskId');
+  if (!taskId) throw new AppError(400, "Mangler taskId");
 
   try {
-    const task = await sql<Task[]>`
-      SELECT *
-      FROM "Task"
-      WHERE "id" = ${taskId}
-    `;
-    if (!task[0]) throw new AppError(404, 'Fant ikke oppgaven');
-    return task[0];
+    const task = await prisma.task.findUnique({
+      where: { id: taskId },
+    });
+
+    if (!task) throw new AppError(404, "Fant ikke oppgaven");
+
+    return task;
   } catch (err) {
-    console.error('Databasefeil ved henting av task:', err);
-    throw new AppError(500, 'Kunne ikke hente oppgave');
+    console.error("Databasefeil ved henting av task:", err);
+    throw new AppError(500, "Kunne ikke hente oppgave");
   }
 }
 
+/**
+ * Henter alle tasks for en gitt liste
+ */
 export async function fetchTasksForList(listId: string) {
-  if (!listId) throw new AppError(400, 'Mangler listId');
+  if (!listId) throw new AppError(400, "Mangler listId");
 
   try {
-    const tasks = await sql<Task[]>`
-      SELECT *
-      FROM "Task"
-      WHERE "listId" = ${listId}
-      ORDER BY "createdAt" ASC
-    `;
+    const tasks = await prisma.task.findMany({
+      where: { listId },
+      orderBy: { createdAt: "asc" },
+    });
+
     return tasks;
   } catch (err) {
-    console.error('Databasefeil ved henting av tasks for liste:', err);
-    throw new AppError(500, 'Kunne ikke hente oppgaver for listen');
+    console.error("Databasefeil ved henting av tasks for liste:", err);
+    throw new AppError(500, "Kunne ikke hente oppgaver for listen");
   }
 }
 
+/**
+ * Henter første bruker i databasen (enkel løsning for utvikling)
+ */
 export async function fetchUser() {
   try {
-    const users = await sql<User[]>`
-      SELECT *
-      FROM "User"
-      LIMIT 1
-    `;
-    if (!users[0]) throw new AppError(404, 'Fant ingen bruker');
-    return users[0];
+    const user = await prisma.user.findFirst();
+    if (!user) throw new AppError(404, "Fant ingen bruker");
+    return user;
   } catch (err) {
-    console.error('Databasefeil ved henting av bruker:', err);
-    throw new AppError(500, 'Kunne ikke hente bruker');
+    console.error("Databasefeil ved henting av bruker:", err);
+    throw new AppError(500, "Kunne ikke hente bruker");
   }
 }

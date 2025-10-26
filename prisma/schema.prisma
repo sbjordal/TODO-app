@@ -1,13 +1,13 @@
 
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
 generator client {
   provider = "prisma-client-js"
 }
 
-datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
-}
 
 model Task {
   id          String @id @default(uuid())
@@ -15,7 +15,7 @@ model Task {
   title       String
   completed   Boolean
   dueDate     DateTime?
-  tags        String[] @default([])
+  tags        Json @default("[]")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   list        List @relation(fields: [listId], references: [id])
