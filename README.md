@@ -28,7 +28,7 @@ TODO: fyll ut når ferdig
 ## Kjøre prosjektet
 1. **Klon repoet:**
 `git clone https://github.com/sbjordal/TODO-app`
-`cd <prosjektnavn>`
+`cd TODO-app`
 2. **Installer avhengigheter:**
 `npm install` eller `pnpm install`
 3. **Konfigurer miljøvariabler:**

@@ -13,7 +13,6 @@ export default function Page() {
       <div className="page-title">
         <h1 className="landing-title">TODO</h1>
         <div className="center-container ">
-          <p className="page-subtitle"> Her kommer det mer funksjonalitet senere</p>
         <AppButton 
         path="/dashboard"
         label="Til mine lister"
