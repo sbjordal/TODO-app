@@ -5,8 +5,6 @@ import { HomeIcon } from "@heroicons/react/24/outline";
 
 export default async function CreateListPage() {
   const user = await fetchUser();
-  if (!user) throw new Error("User not found");
-
   const lists = await fetchLists(user.id);
 
   return (

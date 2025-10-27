@@ -1,3 +1,5 @@
+'use server';
+
 import { notFound }from "next/navigation";
 import { prisma } from "./prisma";
 import { AppError } from "./errors";

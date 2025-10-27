@@ -11,11 +11,7 @@ type Props = {
 export default async function ListPage({ params }: Props) {
   const resolvedParams = await params; 
   const listId = resolvedParams.listId;
-
-  if (!listId) throw new Error("Invalid listId");
-
   const list = await fetchListWithTasks(listId);
-  if (!list) throw new Error("List not found");
 
   return (
     <div className="page-container">

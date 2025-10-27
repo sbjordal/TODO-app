@@ -54,7 +54,6 @@ export default function TaskItem({
 }: Props) {
     return (
     <li className={task.completed ? "task-finished" : ""}>
-      {/* Venstre side */}
       <div className="flex items-center gap-2">
         <input
           type="checkbox"
@@ -80,8 +79,6 @@ export default function TaskItem({
           </span>
         )}
       </div>
-
-      {/* Høyre side (actions) */}
       <div className="flex gap-1">
         {isEditing ? (
           <>

@@ -1,3 +1,5 @@
+/* Database-tabellene */
+
 export type Task = {
     id: string;
     listId: string; //koblet til listen oppgaven tilhører

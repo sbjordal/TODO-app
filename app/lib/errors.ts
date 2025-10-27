@@ -1,4 +1,3 @@
-// app/lib/errors.ts
 export class AppError extends Error {
   status: number;
 

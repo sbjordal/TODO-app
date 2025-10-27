@@ -7,8 +7,6 @@ import { PlusIcon } from "@heroicons/react/24/outline";
 
 export default async function DashboardPage() {
   const user = await fetchUser();
-  if (!user) throw new Error("User not found");
-
   const lists: TodoList[] = await fetchLists(user.id);
   const tasks: Task[] = await fetchTasksByUser(user.id);
 
