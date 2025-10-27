@@ -37,7 +37,7 @@ export async function fetchListWithTasks(listId: string) {
   });
 
   if (!list) {
-    notFound(); // 👈 Dette gjør at Next.js viser not-found.tsx
+    notFound();
   }
 
   return list;
