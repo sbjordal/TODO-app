@@ -1,19 +1,25 @@
 # TODO-app
 ### **Stine Bjordal**
-<img src="public/images/dashboard.png" alt="Skjermbilde av dashboard" width="300"/>
-<img src="public/images/listpage.png" alt="Skjermbilde av listpage" width="300"/>
 
+<div style="float: right; margin-left: 20px;">
+    <img src="public/images/dashboard.png" alt="Skjermbilde av dashboard" width="300"/>
+</div>
 
-En To-do applikasjon bygget med [Next.js](https://nextjs.org/), [TypeScript](https://www.typescriptlang.org/) og [Prisma](https://www.prisma.io/) med [SQLite](https://www.sqlite.org/) som database.  
-Appen lar brukere lage lister, legge til oppgaver, merke dem som ferdig, redigere og slette dem. Prosjektet er laget for lokal kjøring.
+En TODO-applikasjon bygget med [Next.js](https://nextjs.org/), [TypeScript](https://www.typescriptlang.org/) og [Prisma](https://www.prisma.io/) med [SQLite](https://www.sqlite.org/) som database.  
+
 
 ## Funksjonalitet
+
 - Opprett nye lister  
 - Se oversikt over eksisterende lister  
 - Legg til oppgaver i en liste  
 - Rediger oppgaver  
 - Merk oppgaver som fullført  
 - Slett oppgaver og lister 
+
+<div style="float: right; margin-left: 20px;">
+    <img src="public/images/listpage.png" alt="Skjermbilde av listpage" width="300"/>
+</div>
 
 ## Teknologier brukt
 - [Next.js](https://nextjs.org/) (App Router)  
@@ -98,7 +104,7 @@ Disse avgrensningene er gjort for å holde prosjektet enkelt og fokusert på fun
 
 ## Videre arbeid / forbedringer
 - Legge til funksjonalitet for tidsfrister, tags og "favoritt"-markering av Tasks
-- Mulighet for å legge til flere Users
+- Mulighet for å legge til flere brukere, samt å velge bruker
 - Skrive flere enhetstester og utvide testdekningen
 - Bedre ytelse og optimalisering
 - Legge til autentisering og adganskontroll
