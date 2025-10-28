@@ -1,9 +1,7 @@
+<img align="right" width=300 src="public/images/dashboard.png" alt="Skjermbilde av dashboard">
+
 # TODO-app
 ### **Stine Bjordal**
-
-<div style="float: right; margin-left: 20px;">
-    <img src="public/images/dashboard.png" alt="Skjermbilde av dashboard" width="300"/>
-</div>
 
 En TODO-applikasjon bygget med [Next.js](https://nextjs.org/), [TypeScript](https://www.typescriptlang.org/) og [Prisma](https://www.prisma.io/) med [SQLite](https://www.sqlite.org/) som database.  
 
@@ -17,9 +15,7 @@ En TODO-applikasjon bygget med [Next.js](https://nextjs.org/), [TypeScript](http
 - Merk oppgaver som fullført  
 - Slett oppgaver og lister 
 
-<div style="float: right; margin-left: 20px;">
-    <img src="public/images/listpage.png" alt="Skjermbilde av listpage" width="300"/>
-</div>
+<img src="public/images/listpage.png" alt="Skjermbilde av listpage" width="300"/>
 
 ## Teknologier brukt
 - [Next.js](https://nextjs.org/) (App Router)  
