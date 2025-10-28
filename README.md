@@ -1,5 +1,7 @@
 # TODO-app
 ### **Stine Bjordal**
+<img src="./public/images/dashboard.png" alt="Skjermbilde av dashboard" width="300"/>
+
 
 En To-do applikasjon bygget med [Next.js](https://nextjs.org/), [TypeScript](https://www.typescriptlang.org/) og [Prisma](https://www.prisma.io/) med [SQLite](https://www.sqlite.org/) som database.  
 Appen lar brukere lage lister, legge til oppgaver, merke dem som ferdig, redigere og slette dem. Prosjektet er laget for lokal kjøring.

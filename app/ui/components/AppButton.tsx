@@ -8,7 +8,7 @@ type Props = {
   label: string;
   className?: string;
   icon?: React.ReactNode;  
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 };
 
 /**
@@ -30,9 +30,9 @@ type Props = {
 export default function AppButton({ path, label, className, icon, onClick}: Props) {
   const router = useRouter();
 
-  const handleClick = () => {
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (onClick) {
-      onClick();
+      onClick(e);
     } else if (path) {
       router.push(path);
     }

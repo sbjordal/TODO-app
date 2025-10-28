@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { updateList, deleteList } from "@/app/lib/actions";
 import AppButton from "./AppButton";
 import { PencilIcon, TrashIcon, CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
@@ -20,10 +21,9 @@ type Props = {
  * Viser en enkelt liste med tittel og handlingsknapper for redigering og sletting.
  * 
  * Funksjonalitet:
- * - Viser listenavnet med lenke til detaljsiden.
- * - Lar brukeren redigere navnet på listen direkte i kortet.
- * - Lar brukeren slette listen.
- * - Viser feilmeldinger ved feil under oppdatering eller sletting.
+ * - Viser listenavnet med lenke til detaljsiden
+ * - Lar brukeren redigere navnet på listen 
+ * - Lar brukeren slette listen
  * 
  * Props:
  * - `list` (object, required): Objekt med:
@@ -39,6 +39,7 @@ export default function ListCard({ list }: Props) {
   const [editing, setEditing] = useState(false);
   const [newName, setNewName] = useState(list.name);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   async function handleSave() {
     const result = await updateList(list.id, newName);
@@ -57,8 +58,16 @@ export default function ListCard({ list }: Props) {
     }
   }
 
+  function handleCardClick(e: React.MouseEvent<HTMLDivElement>) {
+    if (!editing) {
+      router.push(`/dashboard/${list.id}`);
+    }
+  }
+
   return (
-    <div className="list-card flex flex-col justify-between">
+    <div className="list-card flex flex-col justify-between"
+    onClick={handleCardClick}
+    role="link">
 
       {editing ? (
         <input
@@ -66,26 +75,27 @@ export default function ListCard({ list }: Props) {
           value={newName}
           onChange={(e) => setNewName(e.target.value)}
           className="input w-full mb-2"
-          onKeyDown={(e) => e.key === "Enter" && handleSave()}
+          onKeyDown={(e) => e.key === "Enter" && handleSave()} //kan lagre endring med enter
         />
       ) : (
-        <Link href={`/dashboard/${list.id}`} className= "no-underline">
-          <h2 className="list-card-title">{list.name}</h2>
-        </Link>
+        <h2 className="list-card-title">{list.name}</h2>
       )}
-
       <div className="flex gap-2 mt-2 justify-end">
         {editing ? (
           <>
             <AppButton
               className="icon-button"
-              onClick={handleSave}
+              onClick={(e) => {
+                e.stopPropagation(); //hindrer at man tas til listpage her
+                handleSave();
+              }}
               label=""
               icon={<CheckIcon className="icon" />}
             />
             <AppButton
               className="icon-button"
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation(); //hindrer at man tas til listpage her
                 setEditing(false);
                 setNewName(list.name);
               }}
@@ -96,14 +106,20 @@ export default function ListCard({ list }: Props) {
         ) : (
           <AppButton
             className="icon-button"
-            onClick={() => setEditing(true)}
+            onClick={(e) => {
+              e.stopPropagation(); //hindrer at man tas til listpage her
+              setEditing(true)
+            }}
             label=""
             icon={<PencilIcon className="icon" />}
           />
         )}
         <AppButton
           className="icon-button"
-          onClick={handleDelete}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleDelete();
+          }}
           label=""
           icon={<TrashIcon className="icon" />}
         />
