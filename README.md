@@ -1,6 +1,7 @@
 # TODO-app
 ### **Stine Bjordal**
-<img src="./public/images/dashboard.png" alt="Skjermbilde av dashboard" width="300"/>
+<img src="public/images/dashboard.png" alt="Skjermbilde av dashboard" width="300"/>
+<img src="public/images/listpage.png" alt="Skjermbilde av listpage" width="300"/>
 
 
 En To-do applikasjon bygget med [Next.js](https://nextjs.org/), [TypeScript](https://www.typescriptlang.org/) og [Prisma](https://www.prisma.io/) med [SQLite](https://www.sqlite.org/) som database.  
