@@ -17,7 +17,7 @@ export default async function DashboardPage() {
         Her er listene dine:</p>
 
       <div className="list-grid">
-        {lists.length === 0 ? (
+        {lists.length === 0 ? ( //Dersom user ikke har noen lister
           <p className="page-subtitle"> 
           Du har ingen lister enda.</p>
         ) : (

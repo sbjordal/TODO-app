@@ -1,64 +1,68 @@
-// route.ts (POST)
+/**
+ * API Route: /api/tasks
+ *
+ * Håndterer:
+ * - GET:  Hent alle tasks for en gitt bruker
+ * - POST: Opprett ny task
+ */
+
 import { CreateTaskSchema } from "@/app/lib/validation";
 import { prisma } from "@/app/lib/prisma";
 import { NextResponse } from "next/server";
+import { z } from "zod";
 
-export async function POST(req: Request) {
-  try {
-    const { title, listId, tags } = CreateTaskSchema.parse(await req.json());
+/**
+ * GET /api/tasks
+ * Henter tasks 
+ */
+export async function GET(req: Request) {
+    //Henter ut query-parametre fra URL
+    const { searchParams } = new URL(req.url);
+    const userId = searchParams.get("userId") || undefined;
 
-    const task = await prisma.task.create({
-      data: {
-        title,
-        completed: false,
-        tags: tags ?? [],
-        list: { connect: { id: listId } },
-      },
-    });
+    if (!userId) {
+        return NextResponse.json({ message: "Mangler userId"}, { status: 400});
+    }
 
-    return NextResponse.json(task, { status: 201 });
-  } catch (err) {
-  console.error("POST /api/tasks failed", err);
-  return NextResponse.json({ message: "Uventet feil" }, { status: 500 });
-}
+    try {
+        const tasks = await prisma.task.findMany({
+            where : { list: { userId } },
+            orderBy: { createdAt: "desc" },
+            include: { list: true }, //Kan inkludere tilhørende liste
+            });
+        return NextResponse.json(tasks, { status: 200 }); //suksess
+    } catch (err) {
+        console.error("GET /api/tasks failed", err);
+        return NextResponse.json({ message: "Kunne ikke hente tasks" }, { status: 500 }); //uventet serverfeil
+    }
 }
 
 /**
- * Henter tasks (kan filtreres på query, completed og userId)
- * Eksempel:
- *  /api/tasks?query=foo&completed=true&userId=abc123
+ * POST /api/tasks
+ * Oppretter en ny task i databasen.
  */
-export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url);
-  const query = searchParams.get("query") || undefined;
-  const completedParam = searchParams.get("completed");
-  const completed =
-    completedParam === "true" ? true : completedParam === "false" ? false : undefined;
-  const userId = searchParams.get("userId") || undefined;
-
-  const where: any = {};
-  if (query) {
-    where.title = { contains: query, mode: "insensitive" };
-  }
-  if (completed !== undefined) {
-    where.completed = completed;
-  }
-  if (userId) {
-    where.list = { userId }; // 👈 kobler Task til bruker via list-relasjon
-  }
-
-  try {
-    const tasks = await prisma.task.findMany({
-      where,
-      orderBy: { createdAt: "desc" },
-      include: { list: true }, // valgfritt, men nyttig for debugging
-    });
-    return NextResponse.json(tasks);
-  } catch (err) {
-    console.error("GET /api/tasks failed", err);
-    return NextResponse.json(
-      { message: "Kunne ikke hente tasks" },
-      { status: 500 }
-    );
-  }
+export async function POST(req: Request) {
+    try {
+        const body = await req.json(); // Det som skal oppdateres (fra klient)
+        const { title, listId, tags } = CreateTaskSchema.parse(body); //validerer
+        const task = await prisma.task.create({
+        data: {
+            title,
+            completed: false,
+            tags: tags ?? [],
+            list: { connect: { id: listId } },
+        },
+        });
+        return NextResponse.json(task, { status: 201 }); //Created (success)
+    } catch (err) {
+        if (err instanceof z.ZodError) {
+            return NextResponse.json(
+                { message: err.issues[0]?.message ?? "Ugyldig input" },
+                { status: 422 }); //ugyldig input (valideringsfeil)
+        }
+    console.error("POST /api/tasks failed", err);
+    return NextResponse.json({ message: "Uventet feil" }, { status: 500 }); //uventet serverfeil
+    }
 }
+
+

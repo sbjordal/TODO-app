@@ -5,14 +5,11 @@ import AppButton from "@/app/ui/components/AppButton";
 import { HomeIcon } from "@heroicons/react/24/outline";
 import type { TodoList } from "@/app/lib/definitions";
 
-export default async function ListPage({
-  params,
-}: {
-  params: Promise<{ listId: string }>;
-}) {
+export default async function ListPage({params,}: {params: Promise<{ listId: string }>;}) {
+  // "parameteren skal ha et felt params som er en Promise med listId av typen string."
   
   const { listId } = await params; 
-  let list: TodoList = await fetchListWithTasks(listId);
+  const list: TodoList = await fetchListWithTasks(listId);
 
   return (
     <div className="page-container">

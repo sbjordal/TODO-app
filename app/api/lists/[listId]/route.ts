@@ -1,79 +1,79 @@
+/**
+ * API Route: /api/lists/[listId]
+ *
+ * Håndterer:
+ * - GET:  Henter én liste med alle tilhørende tasks
+ * - PUT:  Oppdaterer navnet på en liste
+ * - DELETE: Sletter listen og alle tasks som tilhører den
+ */
+
 import { NextResponse } from "next/server";
 import { prisma } from "@/app/lib/prisma";
+import { UpdateListSchema } from "@/app/lib/validation";
+import { z } from "zod";
 
 /**
  * GET /api/lists/:listId
- * Henter en spesifikk liste og tilhørende tasks.
+ * Henter en spesifikk liste med tilhørende tasks.
  */
-export async function GET(
-  _req: Request,
-  context: { params: Promise<{ listId: string }> }
-) {
-  try {
-    const { listId } = await context.params; // 👈 må awaites
+export async function GET(_req: Request, context: { params: Promise<{ listId: string }> }) {
+    const { listId } = await context.params;
 
-    const list = await prisma.list.findUnique({
-      where: { id: listId },
-      include: { tasks: { orderBy: { createdAt: "asc" } } },
-    });
+    try {
+        const list = await prisma.list.findUnique({
+            where: { id: listId },
+            include: { tasks: { orderBy: { createdAt: "asc" } } },});
 
-    if (!list) {
-      return NextResponse.json({ message: "Fant ikke listen" }, { status: 404 });
+        if (!list) {
+        return NextResponse.json({ message: "Fant ikke listen" }, { status: 404 });
+        }
+
+        return NextResponse.json(list);
+    } catch (err: any) {
+        console.error("GET /api/lists/[listId] failed:", err.message ?? err);
+        return NextResponse.json({ message: "Kunne ikke hente listen" }, { status: 500 });
     }
-
-    return NextResponse.json(list);
-  } catch (err: any) {
-    console.error("GET /api/lists/[listId] failed:", err.message ?? err);
-    return NextResponse.json(
-      { message: "Kunne ikke hente listen" },
-      { status: 500 }
-    );
-  }
 }
 
 /**
  * PUT /api/lists/:listId
- * Oppdaterer navn på liste.
+ * Oppdaterer navnet på en eksisterende liste.
  */
-export async function PUT(
-  req: Request,
-  context: { params: Promise<{ listId: string }> }
-) {
-  const { listId } = await context.params;
+export async function PUT(req: Request, context: { params: Promise<{ listId: string }> }) {
+    const { listId } = await context.params;
 
-  try {
-    const { name } = await req.json();
+    try {
+        const body = await req.json();
+        const { name } = UpdateListSchema.parse(body); //validere
 
-    const updated = await prisma.list.update({
-      where: { id: listId },
-      data: { name },
-    });
+        const updated = await prisma.list.update({
+            where: { id: listId },
+            data: { name },});
 
-    return NextResponse.json(updated);
-  } catch (err: any) {
-    console.error("PUT /api/lists/[listId] failed:", err.message ?? err);
-    return NextResponse.json(
-      { message: "Ugyldig input eller serverfeil" },
-      { status: 500 }
-    );
-  }
+        return NextResponse.json(updated, { status: 200 });
+    } catch (err: any) {
+        if (err instanceof z.ZodError){
+            return NextResponse.json(
+                { message: err.issues[0]?.message ?? "Ugyldig input" },
+                { status: 422 }); //Ugyldig input (valideringsfeil)
+        }
+        console.error("PUT /api/lists/[listId] failed:", err.message ?? err);
+        return NextResponse.json({ message: "Kunne ikke oppdatere listen" },{ status: 500 });
+    }
 }
 
 /**
  * DELETE /api/lists/:listId
- * Sletter liste og alle tasks.
+ * Sletter liste og alle tasks som tilhører den.
  */
-export async function DELETE(
-  _req: Request,
-  context: { params: Promise<{ listId: string }> }
-) {
-  const { listId } = await context.params;
+export async function DELETE(_req: Request, context: { params: Promise<{ listId: string }> }) {
+    const { listId } = await context.params;
 
-  try {
-    const existing = await prisma.list.findUnique({ where: { id: listId } });
-    if (!existing) {
-      return NextResponse.json({ message: "Fant ikke listen" }, { status: 404 });
-    }
+    try {
+        const list = await prisma.list.findUnique({ where: { id: listId } });
+        if (!list) {
+            return NextResponse.json({ message: "Fant ikke listen" }, { status: 404 });
+        }
 
     await prisma.task.deleteMany({ where: { listId } });
     await prisma.list.delete({ where: { id: listId } });
