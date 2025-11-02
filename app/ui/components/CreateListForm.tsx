@@ -3,56 +3,33 @@
 import { useState } from "react";
 import { createList } from "@/app/lib/actions";
 import { useRouter } from "next/navigation";
-import ErrorBanner from "./ErrorBanner";
 import { PlusIcon } from "@heroicons/react/24/outline"; 
 
 /**
- * @component CreateListForm
- * 
- * Skjema for å opprette en ny liste for en gitt bruker.
- * 
- * Sender data til `createList`-action og viser feilmelding ved validerings- eller serverfeil.
- * Oppdaterer siden ved vellykket innsending.
- * 
- * Props:
- * - `userId` (string, required): ID-en til brukeren som listen skal tilhøre.
- * 
- * Funksjonalitet:
- * - Viser inputfelt og knapp
- * - Håndterer innsending og feilmeldinger
+ * Skjema for å opprette en ny liste.
+ * Sender data til `createList` og viser feilmelding fra serveren ved behov.
  */
 
 export default function CreateListForm({ userId }: { userId: string }) {
-  const [name, setName] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
+  const [name, setName] = useState(""); //brukerinput for tittel
+  const [error, setError] = useState<string | null>(null); //for visualisering av feilmelding
+  const router = useRouter(); // for oppdatering / navigering mellom sider
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setLoading(true);
     setError(null);
 
     const formData = new FormData();
     formData.set("userId", userId);
     formData.set("name", name);
+    const result = await createList(formData);
 
-    try {
-      const result = await createList(formData);
-
-      if (!result.success) {
-        if (result.status === 422) setError(result.message);
-        else setError("Uventet feil. Prøv igjen senere.");
-        return;
-      }
-
-      setName("");
-      router.refresh();
-    } catch (err: any) {
-      setError(err.message || "Noe gikk galt");
-    } finally {
-      setLoading(false);
+    if (!result.success) {
+      setError(result.message ?? "Noe gikk galt");
+      return;
     }
+    setName("");
+    router.refresh();
   }
 
   return (
@@ -67,14 +44,14 @@ export default function CreateListForm({ userId }: { userId: string }) {
         />
         <button
           type="submit"
-          disabled={loading}
           className="my-button flex items-center"
         >
           <PlusIcon className="button-icon" />
           Legg til
         </button>
+        <p className="info">{name.length}/140 tegn</p> 
       </form>
-      {error && <ErrorBanner message={error} />}
+      {error && <div className="info">{error}</div>}
     </div>
   );
 }

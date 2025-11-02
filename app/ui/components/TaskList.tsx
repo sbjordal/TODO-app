@@ -4,30 +4,16 @@ import { useEffect, useState } from "react";
 import { deleteTask, toggleTaskCompleted, updateTask } from "@/app/lib/actions";
 import { Task } from "@/app/lib/definitions"
 import TaskItem from "./TaskItem";
-import ErrorBanner from "./ErrorBanner";
 
 type TaskWithListName = Task &{ listName?: string; };
 type Props = { tasks: TaskWithListName[];};
 
 /**
- * @component TaskList
- *
- * Viser og håndterer en liste av oppgaver, inkludert:
- * - Vise oppgaver sortert etter fullført-status
- * - Redigere, fullføre og slette oppgaver
- * - Vise skillelinje mellom aktive og fullførte oppgaver
- * - Håndtere og vise feil med `ErrorBanner`
- *
- * Funksjonalitet:
- * - Oppgaver sorteres slik at ufullførte vises først.
- * - Endringer oppdateres lokalt i state og i databasen via `actions`.
- * - Støtter inline-redigering gjennom `TaskItem`.
- *
- * Props:
- * - `tasks` (TaskWithListName[], required): Liste over oppgaver som skal vises.
- *
- * Bruk:
- * Brukes på både dashbord og listesider for å vise og manipulere oppgaver.
+ * Viser og håndterer en liste av oppgaver.
+ * 
+ * - Lar brukeren fullføre, redigere og slette oppgaver
+ * - Viser feilmeldinger ved feil fra server/actions
+ * - Sorterer aktive oppgaver først, så fullførte
  */
 
 export default function TaskList({ tasks }: Props) {
@@ -50,6 +36,7 @@ export default function TaskList({ tasks }: Props) {
       setError(result.message ?? "Noe gikk galt ved sletting.");
       return;
     }
+    setTaskList((prev) => prev.filter((task) => task.id !== id));
   }
 
   async function handleToggleCompleted(id: string, completed: boolean) {
@@ -96,7 +83,7 @@ export default function TaskList({ tasks }: Props) {
 
   return (
     <>
-      {error && <ErrorBanner message={error} />}
+      {error && <div className="info">{error}</div>}
 
       <ul className="task-list">
         {sortedTasks.map((task, index) => (

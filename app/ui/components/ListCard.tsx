@@ -5,59 +5,49 @@ import { useRouter } from "next/navigation";
 import { updateList, deleteList } from "@/app/lib/actions";
 import AppButton from "./AppButton";
 import { PencilIcon, TrashIcon, CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import ErrorBanner from "./ErrorBanner";
-import Link from "next/link";
-
-type Props = {
-  list: {
-    id: string;
-    name: string;
-  };
-};
 
 /**
- * @component ListCard
- * 
- * Viser en enkelt liste med tittel og handlingsknapper for redigering og sletting.
+ * Viser en liste med navn og knapper for redigering og sletting.
  * 
  * Funksjonalitet:
- * - Viser listenavnet med lenke til detaljsiden
- * - Lar brukeren redigere navnet på listen 
- * - Lar brukeren slette listen
+ * - Klikk på kortet åpner listen (til `/dashboard/[listId]`).
+ * - Brukeren kan redigere navnet og lagre eller avbryte.
+ * - Brukeren kan slette listen.
  * 
- * Props:
- * - `list` (object, required): Objekt med:
- *    - `id` (string): ID for listen.
- *    - `name` (string): Navnet på listen.
- * 
- * Handlinger:
- * - `updateList` kalles når brukeren lagrer endringer.
- * - `deleteList` kalles når brukeren sletter listen.
+ * Feilmeldinger vises direkte under kortet.
  */
 
-export default function ListCard({ list }: Props) {
-  const [editing, setEditing] = useState(false);
-  const [newName, setNewName] = useState(list.name);
-  const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
+export default function ListCard({ list }: { list: { id: string; name: string } }) {
+  const [editing, setEditing] = useState(false); //om bruker redigerer listenavnet
+  const [newName, setNewName] = useState(list.name); //nytt navn
+  const [error, setError] = useState<string | null>(null); //visualisere feilmelding
+  const router = useRouter(); //for oppdatering og navigering
 
+  // Lagrer nytt navn på listen
   async function handleSave() {
+    setError(null);
     const result = await updateList(list.id, newName);
+
     if (!result.success) {
       setError(result.message ?? "Kunne ikke oppdatere tittelen.");
       return;
     }
     setEditing(false);
-    setError(null);
+    router.refresh(); //oppdaterer visningen
   }
 
+  // Sletter listen
   async function handleDelete() {
+    setError(null)
     const result = await deleteList(list.id);
     if (!result.success) {
       setError(result.message ?? "Noe gikk galt ved sletting.");
+      return;
     }
+    router.refresh(); //Oppdaterer
   }
 
+  // Åpner listen hvis man ikke er i redigeringsmodus
   function handleCardClick(e: React.MouseEvent<HTMLDivElement>) {
     if (!editing) {
       router.push(`/dashboard/${list.id}`);
@@ -124,8 +114,7 @@ export default function ListCard({ list }: Props) {
           icon={<TrashIcon className="icon" />}
         />
       </div>
-
-      {error && <ErrorBanner message={error} />}
+      {error && <div className="info">{error}</div>}
     </div>
   );
 }

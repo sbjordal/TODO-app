@@ -34,7 +34,6 @@ En TODO-applikasjon bygget med [Next.js](https://nextjs.org/), [TypeScript](http
 - `TaskList`: viser oppgaver med sortering på fullført/ikke fullført
 - `TaskItem`: håndterer visning og interaksjon for én enkelt oppgave (avhuking, redigering og sletting)
 - `CreateListForm` / `CreateTaskForm`: skjemaer for oppretting av lister og oppgaver  
-- `ErrorBanner`: visning av feilmeldinger  
 - `SearchBar`: søk i oppgaver på tvers av lister
 - `AppButton`: En gjenbrukbar knapp-komponent med støtte for ikon og navigasjon
 

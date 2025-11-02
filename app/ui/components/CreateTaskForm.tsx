@@ -3,31 +3,16 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createTask } from "@/app/lib/actions";
-import ErrorBanner from "./ErrorBanner";
 import { PlusIcon } from "@heroicons/react/24/outline"; 
 
 /**
- * @component CreateTaskForm
- * 
- * Skjema for å opprette en ny oppgave i en spesifikk liste.
- * 
- * Sender data til `createTask`-action og viser feilmeldinger ved valideringsfeil eller serverfeil.
- * Oppdaterer siden ved vellykket innsending.
- * 
- * Props:
- * - `listId` (string, required): ID-en til listen oppgaven skal legges til i.
- * 
- * Funksjonalitet:
- * - Inputfelt for oppgavetittel (maks 140 tegn)
- * - Teller antall tegn
- * - Håndterer innsending og feil
- * - Oppdaterer visningen etter opprettelse
+ * Skjema for å opprette en ny oppgave i en liste.
+ * Sender data til `createTask` og viser eventuell feilmelding fra serveren.
  */
-
 export default function CreateTaskForm({ listId }: { listId: string } ) {
-  const [title, setTitle] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
+  const [title, setTitle] = useState(""); //brukerinput for tittel
+  const [error, setError] = useState<string | null>(null); //for visualisering av feilmelding
+  const router = useRouter(); // for oppdatering / navigering mellom sider
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -36,15 +21,14 @@ export default function CreateTaskForm({ listId }: { listId: string } ) {
     const formData = new FormData();
     formData.set("listId", listId);
     formData.set("title", title);
-
     const result = await createTask(formData);
+
     if (!result.success) {
-      if (result.status === 422) setError(result.message);
-      else setError("Uventet feil. Prøv igjen senere.");
+      setError(result.message ?? "Uventet feil. Prøv igjen senere.");
       return;
     }
     setTitle("");
-    router.refresh(); // Vet ikke om dette er beste måten å løse det
+    router.refresh(); // Oppdaterer listen for å vise ny oppgave
   }
 
   return (
@@ -61,10 +45,9 @@ export default function CreateTaskForm({ listId }: { listId: string } ) {
           <PlusIcon className="button-icon mr-2" />
           Legg til
         </button>
-        <p className="counter">{title.length}/140 tegn</p>
+        <p className="info">{title.length}/140 tegn</p>
       </form>
-      {error && <ErrorBanner message={error} />}
+      {error && <div className="info">{error}</div>}
     </div>
-    
   );
 }

@@ -16,14 +16,11 @@ type Props = {
  * Navigerer til `path` hvis satt, ellers kjører `onClick`.
  */ 
 export default function AppButton({ path, label, className, icon, onClick}: Props) {
-  const router = useRouter();
+  const router = useRouter(); // for navigering mellom sider
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (onClick) {
-      onClick(e);
-    } else if (path) {
-      router.push(path);
-    }
+    if (onClick) onClick(e);
+    else if (path) router.push(path);
   };
 
   return (
