@@ -3,15 +3,15 @@ import CreateTaskForm from "../../ui/components/CreateTaskForm";
 import TaskList from "../../ui/components/TaskList";
 import AppButton from "@/app/ui/components/AppButton";
 import { HomeIcon } from "@heroicons/react/24/outline";
+import type { TodoList } from "@/app/lib/definitions";
 
-type Props = {
-  params: { listId: string };
-};
-
-export default async function ListPage({ params }: Props) {
-  const resolvedParams = await params; 
-  const listId = resolvedParams.listId;
-  const list = await fetchListWithTasks(listId);
+export default async function ListPage({
+  params,
+}: {
+  params: Promise<{ listId: string }>;
+}) {
+  const { listId } = await params; 
+  let list: TodoList = await fetchListWithTasks(listId);
 
   return (
     <div className="page-container">
@@ -19,15 +19,15 @@ export default async function ListPage({ params }: Props) {
 
       <TaskList tasks={list.tasks} />
       <CreateTaskForm listId={list.id} />
+
       <div className="center-container">
         <AppButton
-        path="/dashboard"
-        label="Tilbake"
-        icon={<HomeIcon className="button-icon" />}
-        className="my-button"
+          path="/dashboard"
+          label="Tilbake"
+          icon={<HomeIcon className="button-icon" />}
+          className="my-button"
         />
       </div>
     </div>
-    
   );
 }

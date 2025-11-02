@@ -17,7 +17,7 @@ export type TodoList = {
   name: string;
   createdAt: Date;
   updatedAt?: Date | null;
-  tasks?: Task[];
+  tasks: Task[];
 };
 
 

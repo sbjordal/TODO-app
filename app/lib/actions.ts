@@ -1,236 +1,114 @@
-'use server';
+'use server'
 
-import { z } from 'zod';
-import { revalidatePath } from 'next/cache';
-import { v4 } from 'uuid';
-import { prisma } from './prisma';
+import { revalidatePath } from 'next/cache'
+import { z } from 'zod'
 
-// Zod-skjemaer for validering
-const CreateListSchema = z.object({
-  userId: z.string(),
-  name: z.string()
-    .min(1, 'List name must be at least 1 character')
-    .max(140, 'List name can be max 140 characters'),
-});
 
+// --- Zod-skjemaer ---
 const CreateTaskSchema = z.object({
   listId: z.string(),
-  title: z.string()
-    .min(1, 'Title must be at least 1 character')
-    .max(140, 'Title can be max 140 characters'),
-});
-
+  title: z.string().min(1).max(140),
+})
 const UpdateTaskSchema = z.object({
-  title: z.string()
-    .min(1, 'Title must be at least 1 character')
-    .max(140, 'Title can be max 140 characters'),
-});
-
+  title: z.string().min(1).max(140),
+})
 const UpdateListSchema = z.object({
-  name: z.string()
-    .min(1, 'List name must be at least 1 character')
-    .max(140, 'List name can be max 140 characters'),
-});
+  name: z.string().min(1).max(140),
+})
 
-function getZodMessage(err: z.ZodError) {
-  return err.issues[0]?.message ?? 'Ugyldig input';
+function getBaseUrl() {
+  if (typeof window !== "undefined") return ""; // client-side
+  const base = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+  return base;
 }
 
-/**
- * Oppretter en ny liste for en gitt bruker.  
- * Validerer input med Zod og revaliderer dashboardet ved suksess.
- */
+// --- Opprett liste ---
 export async function createList(formData: FormData) {
-  try {
-    const { userId, name } = CreateListSchema.parse({
-      userId: formData.get('userId'),
-      name: formData.get('name'),
-    });
+  const userId = formData.get('userId') as string
+  const name = formData.get('name') as string
 
-    await prisma.list.create({
-      data: {
-        id: v4(),
-        userId,
-        name,
-      },
-    });
+  const res = await fetch(`${getBaseUrl()}/api/lists`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userId, name }),
+  })
 
-    revalidatePath('/dashboard');
-    return { success: true };
-  } catch (err) {
-    if (err instanceof z.ZodError) {
-      return { success: false, status: 422, message: getZodMessage(err) };
-    }
-    console.error('Uventet feil:', err);
-    return { success: false, status: 500, message: 'Uventet feil på server' };
-  }
+  revalidatePath('/dashboard')
+  return { success: res.ok }
 }
 
-/**
- * Oppretter en ny oppgave i en spesifikk liste.  
- * Validerer input med Zod og revaliderer listesiden ved suksess.
- */
+// --- Opprett task ---
 export async function createTask(formData: FormData) {
-  try {
-    const { listId, title } = CreateTaskSchema.parse({
-      listId: formData.get('listId'),
-      title: formData.get('title'),
-    });
-
-    await prisma.task.create({
-      data: {
-        id: v4(),
-        listId,
-        title,
-        completed: false,
-        tags: [],
-      },
-    });
-
-    revalidatePath(`/dashboard/${listId}`);
-    console.log("DEBUG createTask", formData.get("listId"), formData.get("title"));
-    return { success: true };
-  } catch (err) {
-    if (err instanceof z.ZodError) {
-      return { success: false, status: 422, message: getZodMessage(err) };
-    }
-    console.error('Uventet feil:', err);
-    return { success: false, status: 500, message: 'Uventet feil på server' };
+  const parsed = CreateTaskSchema.safeParse({
+    listId: formData.get('listId'),
+    title: formData.get('title'),
+  })
+  if (!parsed.success) {
+    return { success: false, status: 422, message: parsed.error.issues[0]?.message }
   }
+
+  const res = await fetch(`${getBaseUrl()}/api/tasks`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(parsed.data),
+  })
+
+  revalidatePath(`/dashboard/${parsed.data.listId}`)
+  return { success: res.ok }
 }
 
-/**
- * Endrer status på en oppgave (fullført/ikke fullført).  
- * Oppdaterer databasen og revaliderer den aktuelle listen.
- */
+// --- Toggle completed ---
 export async function toggleTaskCompleted(taskId: string, completed: boolean) {
-  try {
-    if (!taskId) return { success: false, status: 400, message: 'Mangler taskId' };
+  const res = await fetch(`${getBaseUrl()}/api/tasks/${taskId}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ completed }),
+  })
 
-    const task = await prisma.task.findUnique({ where: { id: taskId } });
-    if (!task) return { success: false, status: 404, message: 'Fant ikke task' };
-
-    await prisma.task.update({
-      where: { id: taskId },
-      data: { completed },
-    });
-
-    revalidatePath(`/dashboard/${task.listId}`);
-    return { success: true };
-  } catch (err) {
-    console.error('Uventet feil:', err);
-    return { success: false, status: 500, message: 'Uventet feil på server' };
-  }
+  revalidatePath('/dashboard')
+  return { success: res.ok }
 }
 
-/**
- * Oppdaterer tittelen på en eksisterende oppgave.  
- * Validerer input før lagring og revaliderer visningen.
- */
+// --- Oppdater tittel ---
 export async function updateTask(taskId: string, newTitle: string) {
-  try {
-    UpdateTaskSchema.parse({ title: newTitle });
+  const parsed = UpdateTaskSchema.safeParse({ title: newTitle })
+  if (!parsed.success) return { success: false, status: 422 }
 
-    const task = await prisma.task.findUnique({ where: { id: taskId } });
-    if (!task) return { success: false, status: 404, message: 'Fant ikke task' };
+  const res = await fetch(`${getBaseUrl()}/api/tasks/${taskId}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ title: newTitle }),
+  })
 
-    await prisma.task.update({
-      where: { id: taskId },
-      data: { title: newTitle },
-    });
-
-    revalidatePath(`/dashboard/${task.listId}`);
-    return { success: true };
-  } catch (err) {
-    if (err instanceof z.ZodError) {
-      return { success: false, status: 422, message: getZodMessage(err) };
-    }
-    console.error('Uventet feil:', err);
-    return { success: false, status: 500, message: 'Uventet feil på server' };
-  }
+  revalidatePath('/dashboard')
+  return { success: res.ok }
 }
 
-/**
- * Sletter en oppgave fra databasen.  
- * Returnerer feilkode hvis oppgaven ikke finnes.
- */
+// --- Slett task ---
 export async function deleteTask(taskId: string) {
-  try {
-    if (!taskId) return { success: false, status: 400, message: 'Mangler taskId' };
-
-    const task = await prisma.task.findUnique({ where: { id: taskId } });
-    if (!task) return { success: false, status: 404, message: 'Fant ikke task' };
-
-    await prisma.task.delete({ where: { id: taskId } });
-
-    revalidatePath(`/dashboard/${task.listId}`);
-    return { success: true };
-  } catch (err) {
-    console.error('Uventet feil:', err);
-    return { success: false, status: 500, message: 'Uventet feil på server' };
-  }
+  const res = await fetch(`${getBaseUrl()}/api/tasks/${taskId}`, { method: 'DELETE' })
+  revalidatePath('/dashboard')
+  return { success: res.ok }
 }
 
-/**
- * Oppdaterer navnet på en liste
- * Validerer input med Zod og revaliderer dashbordet.
- */
+// --- Oppdater liste ---
 export async function updateList(listId: string, newName: string) {
-  try {
-    UpdateListSchema.parse({ name: newName });
+  const parsed = UpdateListSchema.safeParse({ name: newName })
+  if (!parsed.success) return { success: false, status: 422 }
 
-    const list = await prisma.list.findUnique({ where: { id: listId } });
-    if (!list) return { success: false, status: 404, message: 'Fant ikke listen' };
+  const res = await fetch(`${getBaseUrl()}/api/lists/${listId}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name: newName }),
+  })
 
-    await prisma.list.update({
-      where: { id: listId },
-      data: { name: newName },
-    });
-
-    revalidatePath('/dashboard');
-    return { success: true };
-  } catch (err) {
-    if (err instanceof z.ZodError) {
-      return { success: false, status: 422, message: getZodMessage(err) };
-    }
-    console.error('Uventet feil:', err);
-    return { success: false, status: 500, message: 'Uventet feil på server' };
-  }
+  revalidatePath('/dashboard')
+  return { success: res.ok }
 }
 
-/**
- * Sletter en liste og alle tilhørende oppgaver.  
- * Revaliderer dashbordet etter sletting.
- */
+// --- Slett liste ---
 export async function deleteList(listId: string) {
-  try {
-    if (!listId) {
-      return { success: false, status: 400, message: 'Mangler listId' };
-    }
-
-    const list = await prisma.list.findUnique({
-      where: { id: listId },
-    });
-
-    if (!list) {
-      return { success: false, status: 404, message: 'Fant ikke listen' };
-    }
-
-    // Slett alle tasks som tilhører denne listen først
-    await prisma.task.deleteMany({
-      where: { listId },
-    });
-
-    // Deretter slett selve listen
-    await prisma.list.delete({
-      where: { id: listId },
-    });
-
-    revalidatePath('/dashboard');
-    return { success: true };
-
-  } catch (err) {
-    console.error('Uventet feil:', err);
-    return { success: false, status: 500, message: 'Uventet feil på server' };
-  }
+  const res = await fetch(`${getBaseUrl()}/api/lists/${listId}`, { method: 'DELETE' })
+  revalidatePath('/dashboard')
+  return { success: res.ok }
 }

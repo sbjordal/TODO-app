@@ -1,113 +1,67 @@
 'use server';
 
-import { notFound }from "next/navigation";
-import { prisma } from "./prisma";
-import { AppError } from "./errors";
+import { AppError } from './errors';
+import type { TodoList, Task, User } from './definitions';
+
+function getBaseUrl() {
+  if (typeof window !== "undefined") return ""; // client-side
+  const base = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+  return base;
+}
+
+/**
+ * Henter første bruker i databasen (midlertidig løsning)
+ */
+export async function fetchUser(): Promise<User> {
+  const res = await fetch(`${getBaseUrl()}/api/users`, { cache: 'no-store' });
+  if (!res.ok) throw new AppError(res.status, 'Kunne ikke hente bruker');
+  const data = await res.json();
+
+  // Valider grovt — vi forventer et objekt med id
+  if (!data || typeof data.id !== 'string') {
+    throw new AppError(500, 'Ugyldig brukerdata fra API');
+  }
+
+  return data;
+}
 
 /**
  * Henter alle lister for en gitt bruker
  */
-export async function fetchLists(userId: string) {
-  if (!userId) throw new AppError(400, "Mangler bruker-ID");
+export async function fetchLists(userId: string): Promise<TodoList[]> {
+  const res = await fetch(`${getBaseUrl()}/api/lists?userId=${userId}`, { cache: 'no-store' });
+  if (!res.ok) throw new AppError(res.status, 'Kunne ikke hente lister');
+  const data = await res.json();
 
-  try {
-    return await prisma.list.findMany({
-      where: { userId },
-      orderBy: { createdAt: "desc" },
-    });
-  } catch (err) {
-    console.error("Databasefeil ved henting av lister:", err);
-    throw new AppError(500, "Kunne ikke hente lister");
+  if (!Array.isArray(data)) {
+    console.error("fetchLists: forventet array, fikk:", data);
+    throw new AppError(500, 'Ugyldig listeformat fra API');
   }
+
+  return data;
 }
 
 /**
- * Henter en spesifikk liste med alle tilhørende tasks
+ * Henter én liste med tasks
  */
-export async function fetchListWithTasks(listId: string) {
-  if (!listId) {
-    throw new Error("Mangler listId");
-  }
-
-  const list = await prisma.list.findUnique({
-    where: { id: listId },
-    include: {
-      tasks: {
-        orderBy: { createdAt: "asc" },
-      },
-    },
-  });
-
-  if (!list) {
-    notFound();
-  }
-
-  return list;
+export async function fetchListWithTasks(listId: string): Promise<TodoList> {
+  const res = await fetch(`${getBaseUrl()}/api/lists/${listId}`, { cache: 'no-store' });
+  if (!res.ok) throw new AppError(res.status, 'Kunne ikke hente listen');
+  const data = await res.json();
+  return data;
 }
 
 /**
  * Henter alle tasks for en bruker
  */
-export async function fetchTasksByUser(userId: string) {
-  if (!userId) throw new AppError(400, "Mangler bruker-ID");
+export async function fetchTasksByUser(userId: string): Promise<Task[]> {
+  const res = await fetch(`${getBaseUrl()}/api/tasks?userId=${userId}`, { cache: 'no-store' });
+  if (!res.ok) throw new AppError(res.status, 'Kunne ikke hente tasks');
+  const data = await res.json();
 
-  try {
-    return await prisma.task.findMany({
-      where: { list: { userId } },
-      orderBy: { createdAt: "asc" },
-    });
-  } catch (err) {
-    console.error("Databasefeil ved henting av brukerens tasks:", err);
-    throw new AppError(500, "Kunne ikke hente oppgaver");
+  if (!Array.isArray(data)) {
+    throw new AppError(500, 'Ugyldig tasks-format fra API');
   }
-}
 
-/**
- * Henter én spesifikk task
- */
-export async function fetchTask(taskId: string) {
-  if (!taskId) throw new AppError(400, "Mangler taskId");
-
-  try {
-    const task = await prisma.task.findUnique({
-      where: { id: taskId },
-    });
-
-    if (!task) throw new AppError(404, "Fant ikke oppgaven");
-    return task;
-  } catch (err) {
-    console.error("Databasefeil ved henting av task:", err);
-    throw new AppError(500, "Kunne ikke hente oppgave");
-  }
-}
-
-/**
- * Henter alle tasks for en gitt liste
- */
-export async function fetchTasksForList(listId: string) {
-  if (!listId) throw new AppError(400, "Mangler listId");
-
-  try {
-    return await prisma.task.findMany({
-      where: { listId },
-      orderBy: { createdAt: "asc" },
-    });
-  } catch (err) {
-    console.error("Databasefeil ved henting av tasks for liste:", err);
-    throw new AppError(500, "Kunne ikke hente oppgaver for listen");
-  }
-}
-
-/**
- * Henter første bruker i databasen (enkel løsning for utvikling)
- */
-export async function fetchUser() {
-  try {
-    const user = await prisma.user.findFirst();
-    if (!user) throw new AppError(404, "Fant ingen bruker");
-    return user;
-  } catch (err) {
-    console.error("Databasefeil ved henting av bruker:", err);
-    throw new AppError(500, "Kunne ikke hente bruker");
-  }
+  return data;
 }

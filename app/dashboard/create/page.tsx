@@ -1,11 +1,12 @@
-import CreateListForm from "../../ui/components/CreateListForm";
+import CreateListForm from "@/app/ui/components/CreateListForm";
 import { fetchUser, fetchLists } from "@/app/lib/data";
 import AppButton from "@/app/ui/components/AppButton";
 import { HomeIcon } from "@heroicons/react/24/outline";
+import type { TodoList } from "@/app/lib/definitions";
 
 export default async function CreateListPage() {
   const user = await fetchUser();
-  const lists = await fetchLists(user.id);
+  const lists: TodoList[] = await fetchLists(user.id);
 
   return (
     <main className="page-container">
@@ -14,9 +15,7 @@ export default async function CreateListPage() {
       {lists.length > 0 ? (
         <ul className="task-list">
           {lists.map((list) => (
-            <li key={list.id}>
-              {list.name}
-            </li>
+            <li key={list.id}>{list.name}</li>
           ))}
         </ul>
       ) : (
@@ -24,6 +23,7 @@ export default async function CreateListPage() {
       )}
 
       <CreateListForm userId={user.id} />
+
       <div className="center-container">
         <AppButton
           path="/dashboard"
