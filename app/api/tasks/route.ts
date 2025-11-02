@@ -1,13 +1,7 @@
 // route.ts (POST)
-import { z } from "zod";
+import { CreateTaskSchema } from "@/app/lib/validation";
 import { prisma } from "@/app/lib/prisma";
 import { NextResponse } from "next/server";
-
-const CreateTaskSchema = z.object({
-  title: z.string().min(1).max(140),
-  listId: z.string(),     
-  tags: z.array(z.string()).optional(),
-});
 
 export async function POST(req: Request) {
   try {
@@ -24,15 +18,9 @@ export async function POST(req: Request) {
 
     return NextResponse.json(task, { status: 201 });
   } catch (err) {
-    if (err instanceof z.ZodError) {
-      return NextResponse.json(
-        { message: err.issues[0]?.message ?? "Ugyldig input" },
-        { status: 422 }
-      );
-    }
-    console.error("POST /api/tasks failed", err);
-    return NextResponse.json({ message: "Uventet feil" }, { status: 500 });
-  }
+  console.error("POST /api/tasks failed", err);
+  return NextResponse.json({ message: "Uventet feil" }, { status: 500 });
+}
 }
 
 /**

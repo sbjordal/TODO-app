@@ -10,6 +10,7 @@ export default async function ListPage({
 }: {
   params: Promise<{ listId: string }>;
 }) {
+  
   const { listId } = await params; 
   let list: TodoList = await fetchListWithTasks(listId);
 

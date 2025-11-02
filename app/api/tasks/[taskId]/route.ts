@@ -1,11 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/app/lib/prisma";
-import { z } from "zod";
-
-const UpdateTaskSchema = z.object({
-  title: z.string().min(1).max(140).optional(),
-  completed: z.boolean().optional(),
-});
+import { UpdateTaskSchema } from "@/app/lib/validation";
 
 /**
  * PUT /api/tasks/:taskId
@@ -48,7 +43,7 @@ export async function DELETE(
 
   try {
     await prisma.task.delete({ where: { id: taskId } });
-    return new NextResponse(null, { status: 204 });
+    return new NextResponse(null, { status: 204 }); //Vellykket sletting
   } catch (err: any) {
     console.error("DELETE /api/tasks/[taskId] failed:", err.message ?? err);
     return NextResponse.json({ message: "Uventet feil" }, { status: 500 });

@@ -78,7 +78,7 @@ export async function DELETE(
     await prisma.task.deleteMany({ where: { listId } });
     await prisma.list.delete({ where: { id: listId } });
 
-    return new NextResponse(null, { status: 204 });
+    return new NextResponse(null, { status: 204 }); //Vellykket sletting
   } catch (err: any) {
     console.error("DELETE /api/lists/[listId] failed:", err.message ?? err);
     return NextResponse.json({ message: "Uventet feil" }, { status: 500 });

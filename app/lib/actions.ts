@@ -1,20 +1,12 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { z } from 'zod'
-
-
-// --- Zod-skjemaer ---
-const CreateTaskSchema = z.object({
-  listId: z.string(),
-  title: z.string().min(1).max(140),
-})
-const UpdateTaskSchema = z.object({
-  title: z.string().min(1).max(140),
-})
-const UpdateListSchema = z.object({
-  name: z.string().min(1).max(140),
-})
+import {
+  CreateListSchema,
+  CreateTaskSchema,
+  UpdateTaskSchema,
+  UpdateListSchema,
+} from "@/app/lib/validation";
 
 function getBaseUrl() {
   if (typeof window !== "undefined") return ""; // client-side
@@ -22,29 +14,52 @@ function getBaseUrl() {
   return base;
 }
 
-// --- Opprett liste ---
+// Opprett liste
 export async function createList(formData: FormData) {
-  const userId = formData.get('userId') as string
-  const name = formData.get('name') as string
+  const parsed = CreateListSchema.safeParse({
+    userId: formData.get('userId'),
+    name: formData.get('name'),
+  })
+
+  if (!parsed.success) {
+    return {
+      success: false,
+      status: 422,
+      message: parsed.error.issues[0]?.message ?? 'Ugyldig input',
+    }
+  }
 
   const res = await fetch(`${getBaseUrl()}/api/lists`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ userId, name }),
+    body: JSON.stringify(parsed.data),
   })
 
+  if (!res.ok) {
+    return {
+      success: false,
+      status: res.status,
+      message: 'Klarte ikke å opprette listen',
+    }
+  }
+
   revalidatePath('/dashboard')
-  return { success: res.ok }
+  return { success: true }
 }
 
-// --- Opprett task ---
+// Opprett task
 export async function createTask(formData: FormData) {
   const parsed = CreateTaskSchema.safeParse({
     listId: formData.get('listId'),
     title: formData.get('title'),
   })
+
   if (!parsed.success) {
-    return { success: false, status: 422, message: parsed.error.issues[0]?.message }
+    return {
+      success: false,
+      status: 422,
+      message: parsed.error.issues[0]?.message ?? 'Ugyldig input',
+    }
   }
 
   const res = await fetch(`${getBaseUrl()}/api/tasks`, {
@@ -57,7 +72,7 @@ export async function createTask(formData: FormData) {
   return { success: res.ok }
 }
 
-// --- Toggle completed ---
+// Oppdatere task som completed (true/false)
 export async function toggleTaskCompleted(taskId: string, completed: boolean) {
   const res = await fetch(`${getBaseUrl()}/api/tasks/${taskId}`, {
     method: 'PUT',
@@ -69,7 +84,7 @@ export async function toggleTaskCompleted(taskId: string, completed: boolean) {
   return { success: res.ok }
 }
 
-// --- Oppdater tittel ---
+// Oppdatere tittel på task
 export async function updateTask(taskId: string, newTitle: string) {
   const parsed = UpdateTaskSchema.safeParse({ title: newTitle })
   if (!parsed.success) return { success: false, status: 422 }
@@ -77,21 +92,21 @@ export async function updateTask(taskId: string, newTitle: string) {
   const res = await fetch(`${getBaseUrl()}/api/tasks/${taskId}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ title: newTitle }),
+    body: JSON.stringify(parsed.data),
   })
 
   revalidatePath('/dashboard')
   return { success: res.ok }
 }
 
-// --- Slett task ---
+// Slett task 
 export async function deleteTask(taskId: string) {
   const res = await fetch(`${getBaseUrl()}/api/tasks/${taskId}`, { method: 'DELETE' })
   revalidatePath('/dashboard')
   return { success: res.ok }
 }
 
-// --- Oppdater liste ---
+// Oppdatere tittel på liste
 export async function updateList(listId: string, newName: string) {
   const parsed = UpdateListSchema.safeParse({ name: newName })
   if (!parsed.success) return { success: false, status: 422 }
@@ -99,14 +114,14 @@ export async function updateList(listId: string, newName: string) {
   const res = await fetch(`${getBaseUrl()}/api/lists/${listId}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name: newName }),
+    body: JSON.stringify(parsed.data),
   })
 
   revalidatePath('/dashboard')
   return { success: res.ok }
 }
 
-// --- Slett liste ---
+// Slett liste
 export async function deleteList(listId: string) {
   const res = await fetch(`${getBaseUrl()}/api/lists/${listId}`, { method: 'DELETE' })
   revalidatePath('/dashboard')

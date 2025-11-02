@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/app/lib/prisma";
-import { z } from "zod";
+import { CreateListSchema } from "@/app/lib/validation";
 
 /**
  * GET /api/lists?userId=<id>
@@ -31,10 +31,6 @@ export async function GET(req: Request) {
  * POST /api/lists
  * Oppretter ny liste.
  */
-const CreateListSchema = z.object({
-  userId: z.string(),
-  name: z.string().min(1).max(140),
-});
 
 export async function POST(req: Request) {
   try {
