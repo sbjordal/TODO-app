@@ -8,7 +8,7 @@ import {
   UpdateListSchema,
 } from "@/app/lib/validation";
 
-function getBaseUrl() {
+function getBaseUrl() { // for å få hele url til ruten
   if (typeof window !== "undefined") return ""; // client-side
   const base = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
   return base;
@@ -16,7 +16,7 @@ function getBaseUrl() {
 
 // Opprett liste
 export async function createList(formData: FormData) {
-  const parsed = CreateListSchema.safeParse({
+  const parsed = CreateListSchema.safeParse({ //Validerer input
     userId: formData.get('userId'),
     name: formData.get('name'),
   })
@@ -29,8 +29,8 @@ export async function createList(formData: FormData) {
     }
   }
 
-  const res = await fetch(`${getBaseUrl()}/api/lists`, {
-    method: 'POST',
+  const res = await fetch(`${getBaseUrl()}/api/lists`, { //sender request til api
+    method: 'POST', //Opprette
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(parsed.data),
   })
@@ -49,11 +49,10 @@ export async function createList(formData: FormData) {
 
 // Opprett task
 export async function createTask(formData: FormData) {
-  const parsed = CreateTaskSchema.safeParse({
+  const parsed = CreateTaskSchema.safeParse({ //Validerer input
     listId: formData.get('listId'),
     title: formData.get('title'),
   })
-
   if (!parsed.success) {
     return {
       success: false,
@@ -62,8 +61,8 @@ export async function createTask(formData: FormData) {
     }
   }
 
-  const res = await fetch(`${getBaseUrl()}/api/tasks`, {
-    method: 'POST',
+  const res = await fetch(`${getBaseUrl()}/api/tasks`, { //sender request til api
+    method: 'POST', //Opprette
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(parsed.data),
   })
@@ -75,8 +74,8 @@ export async function createTask(formData: FormData) {
 // Oppdatere task som completed (true/false)
 export async function toggleTaskCompleted(taskId: string, completed: boolean) {
   try {
-    const res = await fetch(`${getBaseUrl()}/api/tasks/${taskId}`, {
-    method: 'PUT',
+    const res = await fetch(`${getBaseUrl()}/api/tasks/${taskId}`, { //sender request til api
+    method: 'PUT', //Oppdatere
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ completed }),
   })
@@ -101,8 +100,8 @@ export async function updateTask(taskId: string, newTitle: string) {
     success: false, status: 422, message: parsed.error.issues[0]?.message };
 
   try {
-    const res = await fetch(`${getBaseUrl()}/api/tasks/${taskId}`, {
-    method: 'PUT',
+    const res = await fetch(`${getBaseUrl()}/api/tasks/${taskId}`, { //sender request til api
+    method: 'PUT', //Oppdatere
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(parsed.data),});
     
@@ -119,7 +118,8 @@ export async function updateTask(taskId: string, newTitle: string) {
 // Slett task 
 export async function deleteTask(taskId: string) {
   try{
-    const res = await fetch(`${getBaseUrl()}/api/tasks/${taskId}`, { method: 'DELETE' });
+    const res = await fetch(`${getBaseUrl()}/api/tasks/${taskId}`, { //sender request til api
+      method: 'DELETE' }); //Slett
     if (!res.ok) return { success: false, status: res.status, message: "Kunne ikke slette task"};
     
     revalidatePath('/dashboard');
@@ -139,7 +139,7 @@ export async function updateList(listId: string, newName: string) {
   };
 
   const res = await fetch(`${getBaseUrl()}/api/lists/${listId}`, {
-    method: 'PUT',
+    method: 'PUT', //oppdatere
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(parsed.data),
   })
@@ -156,7 +156,8 @@ export async function updateList(listId: string, newName: string) {
 
 // Slett liste
 export async function deleteList(listId: string) {
-  const res = await fetch(`${getBaseUrl()}/api/lists/${listId}`, { method: 'DELETE' })
+  const res = await fetch(`${getBaseUrl()}/api/lists/${listId}`, { //sender request til api
+    method: 'DELETE' }) //Slett
   revalidatePath('/dashboard')
 
   if (!res.ok) return {

@@ -22,7 +22,7 @@ export default function CreateListForm({ userId }: { userId: string }) {
     const formData = new FormData();
     formData.set("userId", userId);
     formData.set("name", name);
-    const result = await createList(formData);
+    const result = await createList(formData); //sender formdata til actions.ts for validering
 
     if (!result.success) {
       setError(result.message ?? "Noe gikk galt");

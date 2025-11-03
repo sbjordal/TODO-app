@@ -21,7 +21,7 @@ export default function CreateTaskForm({ listId }: { listId: string } ) {
     const formData = new FormData();
     formData.set("listId", listId);
     formData.set("title", title);
-    const result = await createTask(formData);
+    const result = await createTask(formData); //sender formdata til actions.ts for validering
 
     if (!result.success) {
       setError(result.message ?? "Uventet feil. Prøv igjen senere.");
