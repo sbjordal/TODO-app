@@ -107,7 +107,7 @@ export default function ListCard({ list }: { list: { id: string; name: string } 
         <AppButton
           className="icon-button"
           onClick={(e) => {
-            e.stopPropagation();
+            e.stopPropagation(); //hindrer at man tas til listpage her
             handleDelete();
           }}
           label=""
